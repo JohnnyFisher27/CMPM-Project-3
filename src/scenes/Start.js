@@ -17,7 +17,7 @@ export class Start extends Phaser.Scene {
         this.map = this.add.tilemap('tiles');
         var tileset = this.map.addTilesetImage('monochrome_tilemap_packed', 'tilesheet');
 
-        this.player = this.physics.add.sprite(50, 600, 'player_nor');
+        this.player = this.physics.add.sprite(600, 500, 'player_nor');
 
         //this.map.createLayer("Background", tileset, 0, 0);
         var layer = this.map.createLayer("Ground", tileset, 0, 0);
