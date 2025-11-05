@@ -9,6 +9,8 @@ export class Start extends Phaser.Scene {
     preload() {
         this.load.image(TILESET_KEY, 'assets/mapPack_tilesheet.png');
         this.load.tilemapTiledJSON('tiles', 'assets/wfcmap.tmj');
+
+        this.load.image('player_nor', 'assets/player_normal.png');
     }
 
     create() {
@@ -18,7 +20,7 @@ export class Start extends Phaser.Scene {
         this.map.createLayer("Tile Layer 2", tileset, 0, 0);
         this.map.createLayer("Tile Layer 3", tileset, 0, 0);
 
-        this.player = this.physics.add.sprite(120, 360, '');
+        this.player = this.physics.add.sprite(120, 360, 'player_nor');
 
         this.jump = this.input.keyboard.addKey("W", false, true);
         //this.down = this.input.keyboard.addKey("S", false, true);
