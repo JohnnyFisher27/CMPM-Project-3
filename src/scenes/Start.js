@@ -41,6 +41,9 @@ export class Start extends Phaser.Scene {
         {
             this.player.body.setGravityY(600);
         }
+        if (this.jump.isDown) {
+            this.player.body.setVelocityY(100);
+        }
 
         if (this.left.isDown && this.player.body.velocity.x > -200) {
             this.player.body.setAccelerationX(-50);
