@@ -21,7 +21,7 @@ export class Start extends Phaser.Scene {
 
         //this.map.createLayer("Background", tileset, 0, 0);
         var layer = this.map.createLayer("Ground", tileset, 0, 0);
-        layer.setCollisionBetween(-1000, 1767);
+        layer.setCollisionBetween(1, 1767);
         this.physics.add.collider(layer, this.player);
         layer.setScale(1.3);
         this.physics.world.TILE_BIAS = 150;
