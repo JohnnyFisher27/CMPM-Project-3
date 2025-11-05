@@ -16,12 +16,15 @@ export class Start extends Phaser.Scene {
     create() {
         this.map = this.add.tilemap('tiles');
         var tileset = this.map.addTilesetImage('monochrome_tilemap_packed', 'tilesheet');
-        this.map.createLayer("Background", tileset, 0, 0);
-        var layer = this.map.createLayer("Ground", tileset, 0, 0);
-        layer.setCollisionBetween(1, 1767);
-        this.physics.add.collider(layer, this.player);
 
-        this.player = this.physics.add.sprite(120, 360, 'player_nor');
+        this.player = this.physics.add.sprite(50, 600, 'player_nor');
+
+        //this.map.createLayer("Background", tileset, 0, 0);
+        var layer = this.map.createLayer("Ground", tileset, 0, 0);
+        layer.setCollisionBetween(-1000, 1767);
+        this.physics.add.collider(layer, this.player);
+        layer.setScale(1.3);
+        this.physics.world.TILE_BIAS = 150;
 
         this.jump = this.input.keyboard.addKey("W", false, true);
         //this.down = this.input.keyboard.addKey("S", false, true);
