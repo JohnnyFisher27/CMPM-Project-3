@@ -20,7 +20,7 @@ export class Start extends Phaser.Scene {
     }
 
     update(time) {
-        let dt = (time - this.last_time)/1000;
+        let dt = (time - this.last_time)/100;
         this.last_time = time;
         
     }
