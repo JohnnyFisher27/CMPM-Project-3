@@ -37,6 +37,7 @@ export class Start extends Phaser.Scene {
     update(time) {
         let dt = (time - this.last_time)/100;
         this.last_time = time;
+        //isgrounded = if (this.player.body.blocked.down == true) {true};
         
         if (this.player.body.velocity.y > 0)
         {
@@ -47,21 +48,21 @@ export class Start extends Phaser.Scene {
             this.player.body.setGravityY(600);
         }
         if (this.jump.isDown) {
-            this.player.body.setVelocityY(100);
+            this.player.body.setVelocityY(-100);
         }
 
-        if (this.left.isDown && this.player.body.velocity.x > -200) {
-            this.player.body.setAccelerationX(-50);
+        if (this.left.isDown && this.player.body.velocity.x > -210) {
+            this.player.body.setAccelerationX(-200);
         }
         if (this.left.isUp && this.player.body.velocity.x < 0) {
-            this.player.body.setAccelerationX(100);
+            this.player.body.setAccelerationX(1000);
         }
 
-        if (this.right.isDown && this.player.body.velocity.x < 200) {
-            this.player.body.setAccelerationX(50);
+        if (this.right.isDown && this.player.body.velocity.x < 210) {
+            this.player.body.setAccelerationX(200);
         }
         if (this.right.isUp && this.player.body.velocity.x > 0) {
-            this.player.body.setAccelerationX(-100);
+            this.player.body.setAccelerationX(-1000);
         }
     }
 }
