@@ -1,4 +1,4 @@
-const TILESET_KEY = 'mapPack_tilesheet';
+
 
 export class Start extends Phaser.Scene {
 
@@ -7,18 +7,17 @@ export class Start extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image(TILESET_KEY, 'assets/mapPack_tilesheet.png');
-        this.load.tilemapTiledJSON('tiles', 'assets/wfcmap.tmj');
+        this.load.image('tilesheet', 'assets/monochrome_tilemap_packed.png');
+        this.load.tilemapTiledJSON('tiles', 'assets/project3map.tmj');
 
         this.load.image('player_nor', 'assets/player_normal.png');
     }
 
     create() {
         this.map = this.add.tilemap('tiles');
-        var tileset = this.map.addTilesetImage('mapPack_tilesheet', TILESET_KEY);
-        this.map.createLayer("Tile Layer 1", tileset, 0, 0);
-        this.map.createLayer("Tile Layer 2", tileset, 0, 0);
-        this.map.createLayer("Tile Layer 3", tileset, 0, 0);
+        var tileset = this.map.addTilesetImage('monochrome_tilemap_packed', 'tilesheet');
+        this.map.createLayer("Background", tileset, 0, 0);
+        this.map.createLayer("Map", tileset, 0, 0);
 
         this.player = this.physics.add.sprite(120, 360, 'player_nor');
 
