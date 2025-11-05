@@ -9,6 +9,16 @@ const config = {
     height: 720,
     backgroundColor: '#000000',
     pixelArt: false,
+    physics: {
+        default: 'arcade',
+        arcade: {
+             gravity: {
+              x: 0,
+              y: 25           
+          },
+          debug: true
+        }
+    },
     scene: [
         Start
     ],
