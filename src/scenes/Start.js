@@ -53,15 +53,20 @@ export class Start extends Phaser.Scene {
             }
         }
 
-        if (this.left.isDown && this.player.body.velocity.x > -210) {
-            this.player.body.setAccelerationX(-200);
+        if (this.left.isDown) {
+            this.player.body.setAccelerationX(-300);
+        }
+        if (this.player.body.velocity.x < -200) {
+            this.player.body.setAccelerationX(0);
         }
         if (this.left.isUp && this.player.body.velocity.x < 0) {
             this.player.body.setAccelerationX(1000);
         }
-
-        if (this.right.isDown && this.player.body.velocity.x < 210) {
-            this.player.body.setAccelerationX(200);
+        if (this.right.isDown) {
+            this.player.body.setAccelerationX(300);
+        }
+        if (this.player.body.velocity.x > 200) {
+            this.player.body.setAccelerationX(0);
         }
         if (this.right.isUp && this.player.body.velocity.x > 0) {
             this.player.body.setAccelerationX(-1000);
