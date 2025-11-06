@@ -17,7 +17,7 @@ export class Start extends Phaser.Scene {
     create() {
         this.coyote = false;
         this.coyote_start = 0;
-        this.grounded = false
+        this.grounded = false;
         this.map = this.add.tilemap('tiles');
         var tileset = this.map.addTilesetImage('monochrome_tilemap_packed', 'tilesheet');
 
