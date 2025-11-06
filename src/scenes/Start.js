@@ -3,6 +3,7 @@
 export class Start extends Phaser.Scene {
 
     constructor() {
+        
         super('Start');
     }
 
@@ -14,6 +15,9 @@ export class Start extends Phaser.Scene {
     }
 
     create() {
+        this.coyote = false;
+        this.coyote_start = 0;
+        this.grounded = false
         this.map = this.add.tilemap('tiles');
         var tileset = this.map.addTilesetImage('monochrome_tilemap_packed', 'tilesheet');
 
@@ -38,7 +42,7 @@ export class Start extends Phaser.Scene {
         let dt = (time - this.last_time)/100;
         this.last_time = time;
         let isgrounded = this.player.body.blocked.down;
-        
+
         if (this.player.body.velocity.y > 0)
         {
             this.player.body.setGravityY(1200);
@@ -47,9 +51,9 @@ export class Start extends Phaser.Scene {
         {
             this.player.body.setGravityY(600);
         }
-        if (isgrounded == true) {
+        if (this.grounded == true) {
             if (this.jump.isDown) {
-                this.player.body.setVelocityY(-300);
+                this.player.body.setVelocityY(-600);
             }
         }
 
@@ -72,6 +76,25 @@ export class Start extends Phaser.Scene {
         if (this.right.isUp && this.player.body.velocity.x > 0) {
             this.player.body.setAccelerationX(-1000);
             this.player.body.setVelocityX(0);
+        }
+
+        if (!isgrounded)
+        {
+            if (this.coyote)
+            {
+                if (time - this.coyote_start > 2000)
+                    this.grounded = false;
+            }
+            else
+            {
+                this.coyote = true;
+                this.coyote_start = time;
+            }
+        }
+        else
+        {
+            this.coyote = false;
+            this.grounded = true;
         }
     }
 }
