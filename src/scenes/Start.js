@@ -61,6 +61,7 @@ export class Start extends Phaser.Scene {
         }
         if (this.left.isUp && this.player.body.velocity.x < 0) {
             this.player.body.setAccelerationX(1000);
+            this.player.body.setVelocityX(0);
         }
         if (this.right.isDown) {
             this.player.body.setAccelerationX(300);
@@ -70,6 +71,7 @@ export class Start extends Phaser.Scene {
         }
         if (this.right.isUp && this.player.body.velocity.x > 0) {
             this.player.body.setAccelerationX(-1000);
+            this.player.body.setVelocityX(0);
         }
     }
 }
