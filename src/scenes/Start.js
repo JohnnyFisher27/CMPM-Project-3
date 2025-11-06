@@ -37,7 +37,7 @@ export class Start extends Phaser.Scene {
     update(time) {
         let dt = (time - this.last_time)/100;
         this.last_time = time;
-        isgrounded = this.player.body.blocked.down;
+        let isgrounded = this.player.body.blocked.down;
         
         if (this.player.body.velocity.y > 0)
         {
@@ -49,7 +49,7 @@ export class Start extends Phaser.Scene {
         }
         if (isgrounded == true) {
             if (this.jump.isDown) {
-                this.player.body.setVelocityY(-100);
+                this.player.body.setVelocityY(-300);
             }
         }
 
