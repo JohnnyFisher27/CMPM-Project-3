@@ -35,6 +35,8 @@ export class Start extends Phaser.Scene {
         this.left = this.input.keyboard.addKey("A", false, true);
         this.right = this.input.keyboard.addKey("D", false, true);
 
+        this.doublejump = 3;
+
         this.cameras.main.centerOn(this.player.x, this.player.y);
     }
 
@@ -51,8 +53,16 @@ export class Start extends Phaser.Scene {
         {
             this.player.body.setGravityY(600);
         }
-        if (isgrounded == true) {
+        if (this.grounded == true) {
             if (this.jump.isDown) {
+                this.grounded = false;
+                this.player.body.setVelocityY(-600);
+            }
+        }
+
+        if (isgrounded == false && this.doublejump > 0) {      //doublejump
+            if (this.jump.isDown) {
+                this.doublejump -= 1;
                 this.player.body.setVelocityY(-600);
             }
         }
@@ -84,7 +94,7 @@ export class Start extends Phaser.Scene {
         {
             if (this.coyote)
             {
-                if (time - this.coyote_start > 2000)
+                if (time - this.coyote_start > 10000)
                     this.grounded = false;
             }
             else
