@@ -30,7 +30,7 @@ export class Start extends Phaser.Scene {
         layer.setScale(1.3);
         this.physics.world.TILE_BIAS = 150;
 
-        this.jump = this.input.keyboard.addKey("W", false, true);
+        this.jump = this.input.keyboard.addKey("Space", false, true);
         //this.down = this.input.keyboard.addKey("S", false, true);
         this.left = this.input.keyboard.addKey("A", false, true);
         this.right = this.input.keyboard.addKey("D", false, true);
@@ -51,7 +51,7 @@ export class Start extends Phaser.Scene {
         {
             this.player.body.setGravityY(600);
         }
-        if (this.grounded == true) {
+        if (isgrounded == true) {
             if (this.jump.isDown) {
                 this.player.body.setVelocityY(-600);
             }
@@ -60,20 +60,22 @@ export class Start extends Phaser.Scene {
         if (this.left.isDown) {
             this.player.body.setAccelerationX(-300);
         }
-        if (this.player.body.velocity.x < -200) {
+        if (this.player.body.velocity.x < -200) {       //cap movement speed
             this.player.body.setAccelerationX(0);
         }
-        if (this.left.isUp && this.player.body.velocity.x < 0) {
+        if (this.left.isUp && this.player.body.velocity.x < 0) {    //slow player down
             this.player.body.setAccelerationX(1000);
             this.player.body.setVelocityX(0);
         }
+
+
         if (this.right.isDown) {
             this.player.body.setAccelerationX(300);
         }
-        if (this.player.body.velocity.x > 200) {
+        if (this.player.body.velocity.x > 200) {        //cap movement speed
             this.player.body.setAccelerationX(0);
         }
-        if (this.right.isUp && this.player.body.velocity.x > 0) {
+        if (this.right.isUp && this.player.body.velocity.x > 0) {   //slow player down
             this.player.body.setAccelerationX(-1000);
             this.player.body.setVelocityX(0);
         }
