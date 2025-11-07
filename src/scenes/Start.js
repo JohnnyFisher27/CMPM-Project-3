@@ -18,6 +18,9 @@ export class Start extends Phaser.Scene {
         this.coyote = false;
         this.coyote_start = 0;
         this.grounded = false;
+        this.doublejump = 3;
+        this.canJump = false;
+
         this.map = this.add.tilemap('tiles');
         var tileset = this.map.addTilesetImage('monochrome_tilemap_packed', 'tilesheet');
 
@@ -35,7 +38,6 @@ export class Start extends Phaser.Scene {
         this.left = this.input.keyboard.addKey("A", false, true);
         this.right = this.input.keyboard.addKey("D", false, true);
 
-        this.doublejump = 3;
 
         this.cameras.main.centerOn(this.player.x, this.player.y);
     }
@@ -54,6 +56,7 @@ export class Start extends Phaser.Scene {
             this.player.body.setGravityY(600);
         }
         if (this.grounded == true) {
+            this.doublejump = 3;
             if (this.jump.isDown) {
                 this.grounded = false;
                 this.player.body.setVelocityY(-600);
@@ -61,9 +64,13 @@ export class Start extends Phaser.Scene {
         }
 
         if (isgrounded == false && this.doublejump > 0) {      //doublejump
-            if (this.jump.isDown) {
+            if (this.jump.isDown && this.canJump) {
+                this.canJump = false;
                 this.doublejump -= 1;
                 this.player.body.setVelocityY(-600);
+            }
+            if (this.jump.isUp) {
+                this.canJump = true;
             }
         }
 
