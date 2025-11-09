@@ -12,6 +12,7 @@ export class Start extends Phaser.Scene {
         this.load.tilemapTiledJSON('tiles', 'assets/project3map.tmj');
 
         this.load.image('player_nor', 'assets/player_normal.png');
+        this.load.image('platform', 'assets/Tiles/Default/tile_0145.png')
     }
 
     create() {
@@ -21,10 +22,16 @@ export class Start extends Phaser.Scene {
         this.doublejump = 3;
         this.canJump = false;
 
+        this.player = this.physics.add.sprite(600, 500, 'player_nor');
+
+        var disappearing_platform = this.physics.add.image(700, 500, 'platform')
+            .setImmovable(true)
+
+        disappearing_platform.body.setAllowGravity(false);
+        this.physics.add.collider(disappearing_platform, this.player, this.disappearPlatform, null, this);
+
         this.map = this.add.tilemap('tiles');
         var tileset = this.map.addTilesetImage('monochrome_tilemap_packed', 'tilesheet');
-
-        this.player = this.physics.add.sprite(600, 500, 'player_nor');
 
         //this.map.createLayer("Background", tileset, 0, 0);
         var layer = this.map.createLayer("Ground", tileset, 0, 0);
@@ -115,5 +122,10 @@ export class Start extends Phaser.Scene {
             this.coyote = false;
             this.grounded = true;
         }
+
     }
+
+    disappearPlatform(platform) {
+            platform.destroy();
+        }
 }
