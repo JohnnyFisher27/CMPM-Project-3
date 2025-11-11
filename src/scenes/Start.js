@@ -21,6 +21,7 @@ export class Start extends Phaser.Scene {
         this.grounded = false;
         this.doublejump = 3;
         this.canJump = false;
+        this.changeAngle = false;
 
         this.player = this.physics.add.sprite(600, 500, 'player_nor');
 
@@ -67,7 +68,8 @@ export class Start extends Phaser.Scene {
             this.player.angle = 0;
             if (this.jump.isDown) {
                 this.grounded = false;
-                this.player.body.setVelocityY(-300);              
+                this.player.body.setVelocityY(-300);       
+                this.player.angle = 90;      
             }
         }
         if (isgrounded == false && this.doublejump > 0) {      //doublejump
@@ -75,13 +77,14 @@ export class Start extends Phaser.Scene {
                 this.canJump = false;
                 this.doublejump -= 1;
                 this.player.body.setVelocityY(-300);
-                this.player.angle += 90;
+                this.player.angle = 90;
             }
             if (this.jump.isUp) {
                 this.canJump = true;
                 this.player.angle = 0;
             }
         }
+       
 
         if (this.left.isDown) {
             this.player.body.setAccelerationX(-300);
