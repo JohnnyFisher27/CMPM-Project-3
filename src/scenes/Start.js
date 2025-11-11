@@ -21,7 +21,7 @@ export class Start extends Phaser.Scene {
         this.grounded = false;
         this.doublejump = 3;
         this.canJump = false;
-        this.changeAngle = false;
+        this.flipSprite = true;
 
         this.player = this.physics.add.sprite(600, 500, 'player_nor');
 
@@ -66,10 +66,18 @@ export class Start extends Phaser.Scene {
         if (this.grounded == true) {
             this.doublejump = 3;
             this.player.angle = 0;
+            this.player.flipX = false;
             if (this.jump.isDown) {
                 this.grounded = false;
                 this.player.body.setVelocityY(-300);       
-                this.player.angle = 90;      
+                if (this.left.isDown) {
+                    this.player.angle = -90;
+                    this.player.flipX = true;
+                }
+                else {
+                    this.player.angle = 90;
+                    this.player.flipX = false;    
+                }
             }
         }
         if (isgrounded == false && this.doublejump > 0) {      //doublejump
@@ -77,7 +85,14 @@ export class Start extends Phaser.Scene {
                 this.canJump = false;
                 this.doublejump -= 1;
                 this.player.body.setVelocityY(-300);
-                this.player.angle = 90;
+                if (this.left.isDown) {
+                    this.player.angle = -90;
+                    this.player.flipX = true;
+                }
+                else {
+                    this.player.angle = 90;
+                    this.player.flipX = false;    
+                }
             }
             if (this.jump.isUp) {
                 this.canJump = true;
@@ -88,6 +103,7 @@ export class Start extends Phaser.Scene {
 
         if (this.left.isDown) {
             this.player.body.setAccelerationX(-300);
+            this.player.flipX = true;
         }
         if (this.player.body.velocity.x < -200) {       //cap movement speed
             this.player.body.setAccelerationX(0);
@@ -100,6 +116,8 @@ export class Start extends Phaser.Scene {
 
         if (this.right.isDown) {
             this.player.body.setAccelerationX(300);
+            this.player.flipX = false;
+            
         }
         if (this.player.body.velocity.x > 200) {        //cap movement speed
             this.player.body.setAccelerationX(0);
