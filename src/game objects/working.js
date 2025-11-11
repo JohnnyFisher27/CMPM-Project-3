@@ -5,6 +5,8 @@
 
 //moving platform
 
+//Make falling spikes, platforms that appear when touched, spikes that kill player
+
 var moving_plat = this.physics.add.image(100, 500, '')
     .setImmovable(true)
     .setVelocity(100, -100);

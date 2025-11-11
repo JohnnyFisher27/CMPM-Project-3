@@ -64,9 +64,10 @@ export class Start extends Phaser.Scene {
         }
         if (this.grounded == true) {
             this.doublejump = 3;
+            this.player.angle = 0;
             if (this.jump.isDown) {
                 this.grounded = false;
-                this.player.body.setVelocityY(-600);
+                this.player.body.setVelocityY(-300);
             }
         }
 
@@ -74,10 +75,13 @@ export class Start extends Phaser.Scene {
             if (this.jump.isDown && this.canJump) {
                 this.canJump = false;
                 this.doublejump -= 1;
-                this.player.body.setVelocityY(-600);
+                this.player.body.setVelocityY(-300);
+                this.player.angle += 90;
+                console.log("jump\n")
             }
             if (this.jump.isUp) {
                 this.canJump = true;
+                this.player.angle = 0;
             }
         }
 
