@@ -5,7 +5,7 @@
 
 //moving platform
 
-//Make falling spikes, platforms that appear when touched, spikes that kill player
+//Make falling spikes, platforms that appear when touched (what this one mean??), spikes that kill player, make appearing spikes
 
 var moving_plat = this.physics.add.image(100, 500, '')
     .setImmovable(true)
@@ -70,3 +70,45 @@ function destroyPlatform(falling_plat) {
       }
   });
 }
+
+
+
+//falling spikes
+
+const dataLayer = map.getObjectLayer('data');           //this would go in the create section in the start.js file
+dataLayer.objects.forEach((data) => {                   //this requires the spikes + colliders to be on an object layer in tiled
+    const { x, y, name, height, width } = data;         //we should probably make our platforms an object layer too
+
+    if (name === 'spike') {
+        const spike = new Spike({scene: this, x, y});
+        const customCollider = new Collider({scene: this, x, y});   //somehow grab the locations of the colliders on tiles and input into here
+        const { y: spikeY } = spike;
+
+        const collider = this.physics.add.overlap(customCollider, this.player,
+            () => {
+                if (!spike.body.allowGravity) {
+                    spike.body.setAllowGravity(true);
+                    this.time.delayedCall(2000, () => {
+                        spike.body.setAllowGravity(false);
+
+                        spike.body.setAcceleration(0, 0);
+                        spike.body.setVelocity(0, 0);
+                        spike.setY(spikeY);
+                    });
+                }
+            }
+        );
+
+        this.physics.add.overlap(spike,this.player,
+            () => {
+                //what happens when spike hits player
+            }
+        );
+    }
+});
+
+
+
+//appearing spikes will probably have like the same code as falling spikes with the collider stuff and all
+//the only difference is what happens when the player collides with the collider (spikes appear instead of fall)
+//im assuming these would have to be on a different object layer cause these collisions are specific to appearing spikes not falling spikes
