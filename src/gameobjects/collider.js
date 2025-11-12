@@ -1,20 +1,18 @@
 
-class Collider extends GameObjects.Sprite {
+class Collider extends Phaser.GameObjects.Sprite {
     constructor({
         scene,
         x = 0,
         y = 0,
-        asset = 'collider',                //I have not loaded the asset, this is just here for looks
         enablePhysics = true,
         addToScene = true,
-        frame,
         name,
     }) 
     
     {
-        super(scene, x, y, asset, frame);
+        super(scene, x, y, 'collider');
         this.setOrigin(0, 1);
-        this.setName(name || asset);
+        this.setName(name || 'collider');
 
         if (addToScene) {
             scene.add.existing(this);
