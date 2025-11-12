@@ -10,8 +10,13 @@ export class Start extends Phaser.Scene {
     preload() {
         this.load.image('tilesheet', 'assets/monochrome_tilemap_packed.png');
         this.load.tilemapTiledJSON('tiles', 'assets/project3map.tmj');
-
-        this.load.image('player_nor', 'assets/player_normal.png');
+        //40-42
+        this.load.spritesheet('player_nor', 'assets/spritesheet.png', 
+            {
+                frameWidth: 14,
+                frameHeight: 15,
+            }
+        );
         this.load.image('platform', 'assets/Tiles/Default/tile_0145.png')
     }
 
@@ -24,6 +29,15 @@ export class Start extends Phaser.Scene {
         this.flipSprite = true;
 
         this.player = this.physics.add.sprite(600, 500, 'player_nor');
+
+        this.anims.create({
+            key: "walk",
+            frames: this.anims.generateFrameNumbers('player_nor', {start: 0, end: 2}),
+            frameRate: 6,
+            repeat: -1
+        });
+        console.log('Animation Frames:', this.anims.get('walk').frames.length);
+        
 
         var disappearing_platform = this.physics.add.image(700, 500, 'platform')
             .setImmovable(true)
@@ -79,6 +93,9 @@ export class Start extends Phaser.Scene {
                     this.player.flipX = false;    
                 }
             }
+            if (this.player.body.velocity.x == 0) {
+                this.player.play("walk")
+            }
         }
         if (isgrounded == false && this.doublejump > 0) {      //doublejump
             if (this.jump.isDown && this.canJump) {
@@ -103,18 +120,22 @@ export class Start extends Phaser.Scene {
 
         if (this.left.isDown) {
             this.player.body.setAccelerationX(-300);
-            this.player.flipX = true;
+            
+            if (isgrounded)
+                this.player.flipX = true;
         }
         if (this.player.body.velocity.x < -200) {       //cap movement speed
             this.player.body.setAccelerationX(0);
         }
         if (this.left.isUp && this.player.body.velocity.x < 0) {    //slow player down
+            
             this.player.body.setAccelerationX(1000);
             this.player.body.setVelocityX(0);
         }
 
 
         if (this.right.isDown) {
+            
             this.player.body.setAccelerationX(300);
             this.player.flipX = false;
             
@@ -122,7 +143,8 @@ export class Start extends Phaser.Scene {
         if (this.player.body.velocity.x > 200) {        //cap movement speed
             this.player.body.setAccelerationX(0);
         }
-        if (this.right.isUp && this.player.body.velocity.x > 0) {   //slow player down
+        if (this.right.isUp && this.player.body.velocity.x > 0) {
+            //slow player down
             this.player.body.setAccelerationX(-1000);
             this.player.body.setVelocityX(0);
         }
