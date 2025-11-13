@@ -10,13 +10,14 @@ export class Start extends Phaser.Scene {
     preload() {
         this.load.image('tilesheet', 'assets/monochrome_tilemap_packed.png');
         this.load.tilemapTiledJSON('tiles', 'assets/project3map.tmj');
-        //40-42
+        
         this.load.spritesheet('player_nor', 'assets/spritesheet.png', 
             {
                 frameWidth: 14,
                 frameHeight: 15,
             }
         );
+        this.load.image('bullet', 'assets/Player_Tiles/tile_0044.png')
         this.load.image('platform', 'assets/Tiles/Default/tile_0145.png')
     }
 
@@ -83,7 +84,8 @@ export class Start extends Phaser.Scene {
             this.player.flipX = false;
             if (this.jump.isDown) {
                 this.grounded = false;
-                this.player.body.setVelocityY(-300);       
+                this.player.body.setVelocityY(-300);
+                this.shoot()
                 if (this.left.isDown) {
                     this.player.angle = -90;
                     this.player.flipX = true;
@@ -102,6 +104,7 @@ export class Start extends Phaser.Scene {
                 this.canJump = false;
                 this.doublejump -= 1;
                 this.player.body.setVelocityY(-300);
+                this.shoot()
                 if (this.left.isDown) {
                     this.player.angle = -90;
                     this.player.flipX = true;
@@ -153,7 +156,7 @@ export class Start extends Phaser.Scene {
         {
             if (this.coyote)
             {
-                if (time - this.coyote_start > 10000)
+                if (time - this.coyote_start > 2000)
                     this.grounded = false;
             }
             else
@@ -173,4 +176,21 @@ export class Start extends Phaser.Scene {
     disappearPlatform(platform) {
             platform.destroy();
         }
+    //create bullet object
+    shoot() {
+        var bullet = this.physics.add.sprite(this.player.x, this.player.y, 'bullet');
+        bullet.setScale(0.3);
+        bullet.angle = 90;
+        bullet.body.setVelocityY(500);
+
+        this.map = this.add.tilemap('tiles');
+        var tileset = this.map.addTilesetImage('monochrome_tilemap_packed', 'tilesheet');
+
+        var layer = this.map.createLayer("Ground", tileset, 0, 0);
+        layer.setCollisionBetween(1, 1767);
+        this.physics.add.collider(bullet, layer, this.disappearPlatform, null, this);
+        layer.setScale(1.3);
+        this.physics.world.TILE_BIAS = 150;
+
+    }
 }
