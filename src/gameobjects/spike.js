@@ -1,5 +1,6 @@
+import {Collider} from "./collider.js";
 
-class Spike extends Phaser.GameObjects.Sprite {
+export class Spike extends Phaser.GameObjects.Sprite {
     constructor({
         scene,
         x = 0,

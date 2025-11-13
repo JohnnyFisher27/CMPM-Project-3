@@ -1,5 +1,5 @@
 
-class Collider extends Phaser.GameObjects.Sprite {
+export class Collider extends Phaser.GameObjects.Sprite {
     constructor({
         scene,
         x = 0,

@@ -1,4 +1,4 @@
-
+import {Spike} from "../gameobjects/spike.js";
 
 export class Start extends Phaser.Scene {
 
@@ -63,6 +63,16 @@ export class Start extends Phaser.Scene {
 
 
         this.cameras.main.centerOn(this.player.x, this.player.y);
+
+        const dataLayer = map.getObjectLayer('data');
+        dataLayer.objects.forEach((data) => {                   
+            const { x, y, name, height, width } = data;         
+
+            if (name === 'spike') {
+                let which = data.properties[0].name;
+                const spike = new Spike({scene: this, x, y});
+            }
+        });
     }
 
     update(time) {
