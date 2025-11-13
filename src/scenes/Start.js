@@ -64,8 +64,8 @@ export class Start extends Phaser.Scene {
 
         this.cameras.main.centerOn(this.player.x, this.player.y);
 
-        const dataLayer = map.getObjectLayer('data');
-        dataLayer.objects.forEach((data) => {                   
+        const dataLayer = map.getObjectLayer('data');       //need to make object layer in tiled called 'data' and put in phaser
+        dataLayer.objects.forEach((data) => {               //and need to to add the image files for the spike and collider
             const { x, y, name, height, width } = data;         
 
             if (name === 'spike') {
