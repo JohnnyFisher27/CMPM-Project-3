@@ -21,8 +21,13 @@ export class Start extends Phaser.Scene {
                 frameHeight: 15,
             }
         );
-        this.load.image('bullet', 'assets/Player_Tiles/tile_0044.png')
-        this.load.image('platform', 'assets/Tiles/Default/tile_0145.png')
+        this.load.image('bullet', 'assets/Player_Tiles/tile_0044.png');
+        this.load.image('platform', 'assets/Tiles/Default/tile_0145.png');
+                
+        
+        this.load.audio('shoot', 'assets/Hit9.wav');
+        this.load.audio('jump', 'assets/Jump3.wav');
+        this.load.audio('boom', 'assets/Boom8.wav');
     }
 
     create() {
@@ -40,9 +45,7 @@ export class Start extends Phaser.Scene {
             frames: this.anims.generateFrameNumbers('player_nor', {start: 0, end: 2}),
             frameRate: 6,
             repeat: -1
-        });
-        console.log('Animation Frames:', this.anims.get('walk').frames.length);
-        
+        });        
 
         /*var disappearing_platform = this.physics.add.image(700, 500, 'platform')
             .setImmovable(true)
@@ -116,53 +119,43 @@ export class Start extends Phaser.Scene {
         {
             this.player.body.setGravityY(600);
         }
-        if (this.grounded == true) {
+        if (isgrounded) {
             this.doublejump = 3;
             this.player.angle = 0;
-            //this.player.flipX = false;
-            if (this.jump.isDown) {
+            if (this.jump.isDown && this.canJump) {
+                this.canJump = false;
                 this.grounded = false;
                 this.player.body.setVelocityY(-300);
-                /*this.shoot()
-                if (this.left.isDown) {
-                    this.player.angle = -90;
-                    this.player.flipX = true;
-                }
-                else {
-                    this.player.angle = 90;
-                    this.player.flipX = false;    
-                }*/
+                this.sound.play('jump');
             }
+            
             if (this.player.body.velocity.x == 0) {
                 this.player.play("walk")
             }
         }
-
-        if (this.player.body.velocity.y > 0) {                  //doublejump
-            if (isgrounded == false && this.doublejump > 0) {
-                if (this.jump.isDown && this.canJump) {
-                    this.canJump = false;
-                    this.doublejump -= 1;
-                    this.player.body.setVelocityY(-300);
-                    this.cameras.main.shake(300, 0.005);
-                    this.shoot()
-                    if (this.left.isDown) {
+        else {
+            if (this.jump.isDown && this.canJump && this.doublejump > 0) {
+                this.canJump = false;
+                this.doublejump -= 1;
+                this.player.body.setVelocityY(-300);
+                this.cameras.main.shake(300, 0.005);
+                this.shoot()
+                if (this.left.isDown) {
                         this.player.angle = -90;
                         this.player.flipX = true;
-                    }
-                    else {
+                }
+                else {
                         this.player.angle = 90;
                         this.player.flipX = false;    
-                    }
-                }
-                if (this.jump.isUp) {
-                    this.canJump = true;
-                    this.player.angle = 0;
                 }
             }
         }
-       
 
+        if (this.jump.isUp) {
+            this.canJump = true;
+            this.player.angle = 0;
+        }
+       
         if (this.left.isDown) {
             this.player.body.setAccelerationX(-300);
             this.player.flipX = true;
@@ -212,25 +205,20 @@ export class Start extends Phaser.Scene {
 
     }
     
-    disappearPlatform(platform) {
-            platform.destroy();
-        }
+    disappearBullet(bullet) {
+        this.sound.play('boom')
+        bullet.destroy();
+            
+    }
 
     //create bullet object
     shoot() {
+        this.sound.play('shoot')
         var bullet = this.physics.add.sprite(this.player.x, this.player.y, 'bullet');
         bullet.setScale(0.3);
         bullet.angle = 90;
         bullet.body.setVelocityY(500);
-
-        this.map = this.add.tilemap('tiles');
-        var tileset = this.map.addTilesetImage('monochrome_tilemap_packed', 'tilesheet');
-
-        var layer = this.map.createLayer("Ground", tileset, 0, 0);
-        layer.setCollisionBetween(1, 1767);
-        this.physics.add.collider(bullet, layer, this.disappearPlatform, null, this);
-        layer.setScale(1.3);
-        this.physics.world.TILE_BIAS = 150;
+        this.physics.add.collider(this.layer, bullet, this.disappearBullet, null, this);
 
     }
 
@@ -241,15 +229,6 @@ export class Start extends Phaser.Scene {
             this.scene.stop("Start");
             this.scene.start('GameOver', /*{highscore: this.high_score}*/);
         }
-    }
-    //create bullet object
-    shoot() {
-        var bullet = this.physics.add.sprite(this.player.x, this.player.y, 'bullet');
-        bullet.setScale(0.3);
-        bullet.angle = 90;
-        bullet.body.setVelocityY(500);
-        this.physics.add.collider(this.layer, bullet, this.disappearPlatform);
-
     }
     
 }
