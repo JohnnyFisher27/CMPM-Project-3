@@ -124,7 +124,6 @@ export class Start extends Phaser.Scene {
             this.player.angle = 0;
             if (this.jump.isDown && this.canJump) {
                 this.canJump = false;
-                this.grounded = false;
                 this.player.body.setVelocityY(-300);
                 this.sound.play('jump');
             }
@@ -184,7 +183,7 @@ export class Start extends Phaser.Scene {
             this.player.body.setVelocityX(0);
         }
 
-        if (!isgrounded)                        //coyote time
+        if (!isgrounded)                        //coyote time doesnt work ask professor
         {
             if (this.coyote)
             {
