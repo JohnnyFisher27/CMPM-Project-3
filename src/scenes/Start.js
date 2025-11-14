@@ -38,7 +38,7 @@ export class Start extends Phaser.Scene {
         this.canJump = false;
         this.flipSprite = true;
 
-        this.player = this.physics.add.sprite(600, 500, 'player_nor');
+        this.player = this.physics.add.sprite(6000, 500, 'player_nor');
 
         this.anims.create({
             key: "walk",
@@ -71,7 +71,7 @@ export class Start extends Phaser.Scene {
 
         this.cameras.main.centerOn(this.player.x, this.player.y);
 
-        /*const dataLayer = map.getObjectLayer('data');       //need to make object layer in tiled called 'data' and put in phaser
+        const dataLayer = this.map.getObjectLayer('data');       //need to make object layer in tiled called 'data' and put in phaser
         dataLayer.objects.forEach((data) => {               //and need to to add the image files for the spike and collider
             const { x, y, name, height, width } = data;         
 
@@ -103,7 +103,7 @@ export class Start extends Phaser.Scene {
             if (name === 'monster') {
                 const monster = new Monster({scene: this, x, y});
             }
-        });*/
+        });
     }
 
     update(time) {
