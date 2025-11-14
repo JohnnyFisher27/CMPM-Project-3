@@ -1,5 +1,5 @@
 
-export class Spike extends Phaser.GameObjects.Sprite {
+export class FallingPlatform extends Phaser.GameObjects.Sprite {
     constructor({
         scene,
         x = 0,
@@ -11,9 +11,9 @@ export class Spike extends Phaser.GameObjects.Sprite {
     }) 
     
     {
-        super(scene, x, y, player, 'spike');
+        super(scene, x, y, player, 'fallingPlatform');
         this.setOrigin(0, 1);
-        this.setName(name || 'spike');
+        this.setName(name || 'fallingPlatform');
 
         if (addToScene) {
             scene.add.existing(this);
@@ -27,7 +27,7 @@ export class Spike extends Phaser.GameObjects.Sprite {
 
         this.physics.add.overlap(this.body, player,
             () => {
-                //hurt or kill player
+                this.destroy();
             }
         );
     }

@@ -21,7 +21,7 @@ this.tweens.add({           //have not tested this so see if it moves back and f
     yoyo: true,
     hold: 2000,
     x: 500
-})
+});
 
 function collide (moving_plat, player) {        //gets the player to stick to the moving platform
   if (moving_plat.body.moves && moving_plat.body.touching.up && player.body.touching.down) {

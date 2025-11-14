@@ -1,4 +1,8 @@
+import {FallingSpike} from "../gameobjects/fallingSpike.js";
+import {Candy} from "../gameobjects/candy.js";
+import {Monster} from "../gameobjects/monster.js";
 import {Spike} from "../gameobjects/spike.js";
+import {FallingPlatform} from "../gameobjects/fallingPlatform.js";
 
 export class Start extends Phaser.Scene {
 
@@ -40,11 +44,11 @@ export class Start extends Phaser.Scene {
         console.log('Animation Frames:', this.anims.get('walk').frames.length);
         
 
-        var disappearing_platform = this.physics.add.image(700, 500, 'platform')
+        /*var disappearing_platform = this.physics.add.image(700, 500, 'platform')
             .setImmovable(true)
 
         disappearing_platform.body.setAllowGravity(false);
-        this.physics.add.collider(disappearing_platform, this.player, this.disappearPlatform, null, this);
+        this.physics.add.collider(disappearing_platform, this.player, this.disappearPlatform, null, this);*/
 
         this.map = this.add.tilemap('tiles');
         var tileset = this.map.addTilesetImage('monochrome_tilemap_packed', 'tilesheet');
@@ -68,9 +72,33 @@ export class Start extends Phaser.Scene {
         dataLayer.objects.forEach((data) => {               //and need to to add the image files for the spike and collider
             const { x, y, name, height, width } = data;         
 
-            if (name === 'spike') {
+            if (name === 'fallingSpike') {
                 let which = data.properties[0].name;
+                const fallingSpike = new FallingSpike({scene: this, x, y});
+            }
+
+            if (name === 'appearingSpike') {
+
+            }
+
+            if (name === 'spike') {
                 const spike = new Spike({scene: this, x, y});
+            }
+
+            if (name === 'fallingPlatform') {
+                const fallingPlatform = new FallingPlatform({scene: this, x, y});
+            }
+
+            if (name === 'movingPlatform') {
+                
+            }
+
+            if (name === 'candy') {
+                const candy = new Candy({scene: this, x, y});
+            }
+
+            if (name === 'monster') {
+                const monster = new Monster({scene: this, x, y});
             }
         });
     }
@@ -80,7 +108,7 @@ export class Start extends Phaser.Scene {
         this.last_time = time;
         let isgrounded = this.player.body.blocked.down;
 
-        if (this.player.body.velocity.y > 0)
+        if (this.player.body.velocity.y > 0)        //jump system
         {
             this.player.body.setGravityY(1200);
         }
@@ -109,6 +137,7 @@ export class Start extends Phaser.Scene {
                 this.player.play("walk")
             }
         }
+
         if (isgrounded == false && this.doublejump > 0) {      //doublejump
             if (this.jump.isDown && this.canJump) {
                 this.canJump = false;
@@ -156,13 +185,12 @@ export class Start extends Phaser.Scene {
         if (this.player.body.velocity.x > 200) {        //cap movement speed
             this.player.body.setAccelerationX(0);
         }
-        if (this.right.isUp && this.player.body.velocity.x > 0) {
-            //slow player down
+        if (this.right.isUp && this.player.body.velocity.x > 0) {   //slow player down
             this.player.body.setAccelerationX(-1000);
             this.player.body.setVelocityX(0);
         }
 
-        if (!isgrounded)
+        if (!isgrounded)                        //coyote time
         {
             if (this.coyote)
             {
@@ -183,9 +211,10 @@ export class Start extends Phaser.Scene {
 
     }
 
-    disappearPlatform(platform) {
+    /*disappearPlatform(platform) {
             platform.destroy();
-        }
+        }*/
+
     //create bullet object
     shoot() {
         var bullet = this.physics.add.sprite(this.player.x, this.player.y, 'bullet');
@@ -202,5 +231,14 @@ export class Start extends Phaser.Scene {
         layer.setScale(1.3);
         this.physics.world.TILE_BIAS = 150;
 
+    }
+
+    checkEndGame()
+    {
+        if (this.player.hp <= 0)        //should our player haver hp?
+        {
+            this.scene.stop("Start");
+            this.scene.start('GameOver', /*{highscore: this.high_score}*/);
+        }
     }
 }
