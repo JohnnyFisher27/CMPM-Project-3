@@ -188,7 +188,7 @@ export class Start extends Phaser.Scene {
         {
             if (this.coyote)
             {
-                if (time - this.coyote_start > 2000)
+                if (time - this.coyote_start > 10000)
                     this.grounded = false;
             }
             else
