@@ -117,9 +117,9 @@ export class Start extends Phaser.Scene {
             this.player.body.setGravityY(600);
         }
         if (this.grounded == true) {
-            //this.doublejump = 3;
+            this.doublejump = 3;
             this.player.angle = 0;
-            this.player.flipX = false;
+            //this.player.flipX = false;
             if (this.jump.isDown) {
                 this.grounded = false;
                 this.player.body.setVelocityY(-300);
@@ -165,9 +165,7 @@ export class Start extends Phaser.Scene {
 
         if (this.left.isDown) {
             this.player.body.setAccelerationX(-300);
-            
-            if (isgrounded)
-                this.player.flipX = true;
+            this.player.flipX = true;
         }
         if (this.player.body.velocity.x < -200) {       //cap movement speed
             this.player.body.setAccelerationX(0);
@@ -213,10 +211,10 @@ export class Start extends Phaser.Scene {
         }
 
     }
-
-    /*disappearPlatform(platform) {
+    
+    disappearPlatform(platform) {
             platform.destroy();
-        }*/
+        }
 
     //create bullet object
     shoot() {
@@ -243,6 +241,7 @@ export class Start extends Phaser.Scene {
             this.scene.stop("Start");
             this.scene.start('GameOver', /*{highscore: this.high_score}*/);
         }
+    }
     //create bullet object
     shoot() {
         var bullet = this.physics.add.sprite(this.player.x, this.player.y, 'bullet');
@@ -252,5 +251,5 @@ export class Start extends Phaser.Scene {
         this.physics.add.collider(this.layer, bullet, this.disappearPlatform);
 
     }
-    }
+    
 }
