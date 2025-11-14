@@ -25,7 +25,7 @@ export class FallingPlatform extends Phaser.GameObjects.Sprite {
             this.body.setImmovable(true);
         }
 
-        this.physics.add.overlap(this.body, player,
+        scene.physics.add.overlap(this.body, player,
             () => {
                 this.destroy();
             }

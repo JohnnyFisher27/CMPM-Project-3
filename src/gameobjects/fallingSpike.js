@@ -6,8 +6,8 @@ export class FallingSpike extends Phaser.GameObjects.Sprite {
         x = 0,
         y = 0,
         dataLayer,
-        player,
         which,
+        player,
         enablePhysics = true,
         addToScene = true,
         name,
@@ -35,7 +35,7 @@ export class FallingSpike extends Phaser.GameObjects.Sprite {
                 if (data.properties[0].name === which) {                //hopefully this if statement is set up right and the variables work
                     const collider = new Collider({scene: this, x, y});
                     const { y: spikeY } = this.y;                            //not sure what this line is for yet until we can test it
-                    this.physics.add.overlap(collider, player,
+                    scene.physics.add.overlap(collider, player,
                         () => {
                             if (!this.body.allowGravity) {
                                 this.body.setAllowGravity(true);
@@ -50,7 +50,7 @@ export class FallingSpike extends Phaser.GameObjects.Sprite {
                         }
                     );
 
-                    this.physics.add.overlap(this.body, player,
+                    scene.physics.add.overlap(this.body, player,
                         () => {
                             //what happens when spike hits player
                         }

@@ -77,7 +77,7 @@ export class Start extends Phaser.Scene {
 
             if (name === 'fallingSpike') {
                 let which = data.properties[0].name;
-                const fallingSpike = new FallingSpike({scene: this, x, y});
+                const fallingSpike = new FallingSpike({scene: this, x, y, dataLayer, which});
             }
 
             if (name === 'appearingSpike') {

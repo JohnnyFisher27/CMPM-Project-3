@@ -25,13 +25,13 @@ export class Monster extends Phaser.GameObjects.Sprite {
             this.body.setImmovable(true);
         }
 
-        this.physics.add.overlap(this.body, player,
+        scene.physics.add.overlap(this.body, player,
             () => {
                 this.destroy();
             }
         );
 
-        this.tweens.add({           //have not tested this yet, hope it moves up and down nicely
+        scene.tweens.add({           //have not tested this yet, hope it moves up and down nicely
             targets: this.body,     //so the player knows to interact with it
             duration: 5000,
             loop: -1,

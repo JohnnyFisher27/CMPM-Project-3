@@ -25,13 +25,13 @@ export class Candy extends Phaser.GameObjects.Sprite {
             this.body.setImmovable(true);
         }
 
-        this.physics.add.overlap(this.body, player, //not sure if this works inside the constructor or even inside the file
+        scene.physics.add.overlap(this.body, player, //not sure if this works inside the constructor or even inside the file
             () => {                                 //if not we can move this to a preupdate or to the start file
                 this.destroy();
             }
         );
 
-        this.tweens.add({           //have not tested this yet, hope it moves up and down nicely
+        scene.tweens.add({           //have not tested this yet, hope it moves up and down nicely
             targets: this.body,     //so the player knows to interact with it
             duration: 5000,
             loop: -1,
