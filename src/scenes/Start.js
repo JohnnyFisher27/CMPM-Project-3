@@ -68,7 +68,7 @@ export class Start extends Phaser.Scene {
 
         this.cameras.main.centerOn(this.player.x, this.player.y);
 
-        const dataLayer = map.getObjectLayer('data');       //need to make object layer in tiled called 'data' and put in phaser
+        /*const dataLayer = map.getObjectLayer('data');       //need to make object layer in tiled called 'data' and put in phaser
         dataLayer.objects.forEach((data) => {               //and need to to add the image files for the spike and collider
             const { x, y, name, height, width } = data;         
 
@@ -100,7 +100,7 @@ export class Start extends Phaser.Scene {
             if (name === 'monster') {
                 const monster = new Monster({scene: this, x, y});
             }
-        });
+        });*/
     }
 
     update(time) {
@@ -117,13 +117,13 @@ export class Start extends Phaser.Scene {
             this.player.body.setGravityY(600);
         }
         if (this.grounded == true) {
-            this.doublejump = 3;
+            //this.doublejump = 3;
             this.player.angle = 0;
             this.player.flipX = false;
             if (this.jump.isDown) {
                 this.grounded = false;
                 this.player.body.setVelocityY(-300);
-                this.shoot()
+                /*this.shoot()
                 if (this.left.isDown) {
                     this.player.angle = -90;
                     this.player.flipX = true;
@@ -131,31 +131,34 @@ export class Start extends Phaser.Scene {
                 else {
                     this.player.angle = 90;
                     this.player.flipX = false;    
-                }
+                }*/
             }
             if (this.player.body.velocity.x == 0) {
                 this.player.play("walk")
             }
         }
 
-        if (isgrounded == false && this.doublejump > 0) {      //doublejump
-            if (this.jump.isDown && this.canJump) {
-                this.canJump = false;
-                this.doublejump -= 1;
-                this.player.body.setVelocityY(-300);
-                this.shoot()
-                if (this.left.isDown) {
-                    this.player.angle = -90;
-                    this.player.flipX = true;
+        if (this.player.body.velocity.y > 0) {                  //doublejump
+            if (isgrounded == false && this.doublejump > 0) {
+                if (this.jump.isDown && this.canJump) {
+                    this.canJump = false;
+                    this.doublejump -= 1;
+                    this.player.body.setVelocityY(-300);
+                    this.cameras.main.shake(300, 0.005);
+                    this.shoot()
+                    if (this.left.isDown) {
+                        this.player.angle = -90;
+                        this.player.flipX = true;
+                    }
+                    else {
+                        this.player.angle = 90;
+                        this.player.flipX = false;    
+                    }
                 }
-                else {
-                    this.player.angle = 90;
-                    this.player.flipX = false;    
+                if (this.jump.isUp) {
+                    this.canJump = true;
+                    this.player.angle = 0;
                 }
-            }
-            if (this.jump.isUp) {
-                this.canJump = true;
-                this.player.angle = 0;
             }
         }
        
