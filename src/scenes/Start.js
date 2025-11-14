@@ -54,10 +54,10 @@ export class Start extends Phaser.Scene {
         var tileset = this.map.addTilesetImage('monochrome_tilemap_packed', 'tilesheet');
 
         //this.map.createLayer("Background", tileset, 0, 0);
-        var layer = this.map.createLayer("Ground", tileset, 0, 0);
-        layer.setCollisionBetween(1, 1767);
-        this.physics.add.collider(layer, this.player);
-        layer.setScale(1.3);
+        this.layer = this.map.createLayer("Ground", tileset, 0, 0);
+        this.layer.setCollisionBetween(1, 1767);
+        this.physics.add.collider(this.layer, this.player);
+        this.layer.setScale(1.3);
         this.physics.world.TILE_BIAS = 150;
 
         this.jump = this.input.keyboard.addKey("Space", false, true);
@@ -243,5 +243,14 @@ export class Start extends Phaser.Scene {
             this.scene.stop("Start");
             this.scene.start('GameOver', /*{highscore: this.high_score}*/);
         }
+    //create bullet object
+    shoot() {
+        var bullet = this.physics.add.sprite(this.player.x, this.player.y, 'bullet');
+        bullet.setScale(0.3);
+        bullet.angle = 90;
+        bullet.body.setVelocityY(500);
+        this.physics.add.collider(this.layer, bullet, this.disappearPlatform);
+
+    }
     }
 }
