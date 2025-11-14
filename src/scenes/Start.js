@@ -23,7 +23,14 @@ export class Start extends Phaser.Scene {
         );
         this.load.image('bullet', 'assets/Player_Tiles/tile_0044.png');
         this.load.image('platform', 'assets/Tiles/Default/tile_0145.png');
-                
+        this.load.image('collider', 'assets/Tiles/Default/tile_0001.png');
+        this.load.image('candy', 'assets/Tiles/Default/tile_0102.png');
+        this.load.image('fallingSpike', 'assets/Tiles/Default/tile_0166.png');
+        this.load.image('fallingPlatform', 'assets/Tiles/Default/tile_0250.png');
+        this.load.image('spike', 'assets/Tiles/Default/tile_0183.png');
+        this.load.image('monster', 'assets/Tiles/Default/tile_0340.png');
+
+
         
         this.load.audio('shoot', 'assets/Hit9.wav');
         this.load.audio('jump', 'assets/Jump3.wav');
