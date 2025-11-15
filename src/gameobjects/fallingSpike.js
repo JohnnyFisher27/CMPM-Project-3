@@ -14,7 +14,7 @@ export class FallingSpike extends Phaser.GameObjects.Sprite {
     }) 
     
     {
-        super(scene, x, y, dataLayer, player, which, 'fallingSpike');
+        super(scene, x, y, 'fallingSpike');
         this.setOrigin(0, 1);
         this.setName(name || 'fallingSpike');
 
@@ -33,18 +33,22 @@ export class FallingSpike extends Phaser.GameObjects.Sprite {
 
             if (name === 'collider') {
                 if (data.properties[0].name === which) {                //hopefully this if statement is set up right and the variables work
-                    const collider = new Collider({scene: this, x, y});
+                    const collider = new Collider({scene, x, y});
                     const { y: spikeY } = this.y;                            //not sure what this line is for yet until we can test it
                     scene.physics.add.overlap(collider, player,
                         () => {
                             if (!this.body.allowGravity) {
                                 this.body.setAllowGravity(true);
-                                this.time.delayedCall(2000, () => {
+                                this.body.setGravityY(1200);
+                                scene.time.delayedCall(5000, () => {
                                     this.body.setAllowGravity(false);
 
                                     this.body.setAcceleration(0, 0);
                                     this.body.setVelocity(0, 0);
-                                    this.setY(spikeY);
+                                    this.setY(spikeY);                  //places the spike offscreen, should move it more off screen though
+                                                                        //maybe add a crashing sound into the ground
+                                    this.setActive(false);
+                                    this.setVisible(false);
                                 });
                             }
                         }

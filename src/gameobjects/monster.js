@@ -11,7 +11,7 @@ export class Monster extends Phaser.GameObjects.Sprite {
     }) 
     
     {
-        super(scene, x, y, player, 'monster');
+        super(scene, x, y, 'monster');
         this.setOrigin(0, 1);
         this.setName(name || 'monster');
 
@@ -25,19 +25,19 @@ export class Monster extends Phaser.GameObjects.Sprite {
             this.body.setImmovable(true);
         }
 
-        scene.physics.add.overlap(this.body, player,
+        scene.physics.add.overlap(this, player,
             () => {
                 this.destroy();
             }
         );
 
         scene.tweens.add({           //have not tested this yet, hope it moves up and down nicely
-            targets: this.body,     //so the player knows to interact with it
-            duration: 5000,
+            targets: this,     //so the player knows to interact with it
+            duration: 500,
             loop: -1,
             yoyo: true,
-            hold: 500,
-            x: 50
+            hold: 100,
+            y: "+=5"
         });
     }
 }

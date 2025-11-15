@@ -11,7 +11,7 @@ export class Spike extends Phaser.GameObjects.Sprite {
     }) 
     
     {
-        super(scene, x, y, player, 'spike');
+        super(scene, x, y, 'spike');
         this.setOrigin(0, 1);
         this.setName(name || 'spike');
 
@@ -25,7 +25,7 @@ export class Spike extends Phaser.GameObjects.Sprite {
             this.body.setImmovable(true);
         }
 
-        scene.physics.add.overlap(this.body, player,
+        scene.physics.add.overlap(this, player,
             () => {
                 //hurt or kill player
             }

@@ -21,6 +21,7 @@ export class Start extends Phaser.Scene {
                 frameHeight: 15,
             }
         );
+
         this.load.image('bullet', 'assets/Player_Tiles/tile_0044.png');
         this.load.image('platform', 'assets/Tiles/Default/tile_0145.png');
         this.load.image('collider', 'assets/Tiles/Default/tile_0001.png');
@@ -30,7 +31,7 @@ export class Start extends Phaser.Scene {
         this.load.image('spike', 'assets/Tiles/Default/tile_0183.png');
         this.load.image('monster', 'assets/Tiles/Default/tile_0340.png');
 
-
+        this.load.image('player', 'assets/player_normal.png');
         
         this.load.audio('shoot', 'assets/Hit9.wav');
         this.load.audio('jump', 'assets/Jump3.wav');
@@ -45,7 +46,8 @@ export class Start extends Phaser.Scene {
         this.canJump = false;
         this.flipSprite = true;
 
-        this.player = this.physics.add.sprite(6000, 500, 'player_nor');
+        this.player = this.physics.add.sprite(4200, 500, 'player_nor');
+        this.player.setDepth(2);
 
         this.anims.create({
             key: "walk",
@@ -64,10 +66,10 @@ export class Start extends Phaser.Scene {
         var tileset = this.map.addTilesetImage('monochrome_tilemap_packed', 'tilesheet');
 
         //this.map.createLayer("Background", tileset, 0, 0);
-        this.layer = this.map.createLayer("Ground", tileset, 0, 0);
-        this.layer.setCollisionBetween(1, 1767);
+        this.layer = this.map.createLayer("Ground", tileset, 0, 26);
+        this.layer.setDepth(0);
+        this.layer.setCollisionBetween(1, 5600);
         this.physics.add.collider(this.layer, this.player);
-        this.layer.setScale(1.3);
         this.physics.world.TILE_BIAS = 150;
 
         this.jump = this.input.keyboard.addKey("Space", false, true);
@@ -75,16 +77,19 @@ export class Start extends Phaser.Scene {
         this.left = this.input.keyboard.addKey("A", false, true);
         this.right = this.input.keyboard.addKey("D", false, true);
 
+        //this.cameras.main.centerOn(this.player.x + 300, this.player.y - 110);       //this needs a lot of work
+        this.cameras.main.zoom = 1.3;
+        this.cameras.main.startFollow(this.player, true, 0.5, 0.5, 0, 100);
+        this.cameras.main.setDeadzone(200, 800);
 
-        this.cameras.main.centerOn(this.player.x, this.player.y);
-
-        const dataLayer = this.map.getObjectLayer('data');       //need to make object layer in tiled called 'data' and put in phaser
-        dataLayer.objects.forEach((data) => {               //and need to to add the image files for the spike and collider
+        const dataLayer = this.map.getObjectLayer('data');
+        dataLayer.objects.forEach((data) => {
             const { x, y, name, height, width } = data;         
 
             if (name === 'fallingSpike') {
                 let which = data.properties[0].name;
-                const fallingSpike = new FallingSpike({scene: this, x, y, dataLayer, which});
+                const fallingSpike = new FallingSpike({scene: this, x, y, dataLayer, which, player: this.player});
+                fallingSpike.setDepth(1);
             }
 
             if (name === 'appearingSpike') {
@@ -92,11 +97,13 @@ export class Start extends Phaser.Scene {
             }
 
             if (name === 'spike') {
-                const spike = new Spike({scene: this, x, y});
+                const spike = new Spike({scene: this, x, y, player: this.player});
+                spike.setDepth(1);
             }
 
             if (name === 'fallingPlatform') {
-                const fallingPlatform = new FallingPlatform({scene: this, x, y});
+                const fallingPlatform = new FallingPlatform({scene: this, x, y, player: this.player});
+                fallingPlatform.setDepth(1);
             }
 
             if (name === 'movingPlatform') {
@@ -104,11 +111,13 @@ export class Start extends Phaser.Scene {
             }
 
             if (name === 'candy') {
-                const candy = new Candy({scene: this, x, y});
+                const candy = new Candy({scene: this, x, y, player: this.player});
+                candy.setDepth(1);
             }
 
             if (name === 'monster') {
-                const monster = new Monster({scene: this, x, y});
+                const monster = new Monster({scene: this, x, y, player: this.player});
+                monster.setDepth(1);
             }
         });
     }
@@ -140,7 +149,7 @@ export class Start extends Phaser.Scene {
             }
         }
         else {
-            if (this.jump.isDown && this.canJump && this.doublejump > 0) {
+            if (this.jump.isDown && this.canJump && this.doublejump > 0) {      //doublejump
                 this.canJump = false;
                 this.doublejump -= 1;
                 this.player.body.setVelocityY(-300);
