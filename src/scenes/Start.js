@@ -3,6 +3,7 @@ import {Candy} from "../gameobjects/candy.js";
 import {Monster} from "../gameobjects/monster.js";
 import {Spike} from "../gameobjects/spike.js";
 import {FallingPlatform} from "../gameobjects/fallingPlatform.js";
+import {MovingPlatform} from "../gameobjects/movingPlatform.js";
 
 export class Start extends Phaser.Scene {
 
@@ -107,7 +108,8 @@ export class Start extends Phaser.Scene {
             }
 
             if (name === 'movingPlatform') {
-                
+                const movingPlatform = new MovingPlatform({scene: this, x, y, player: this.player});
+                movingPlatform.setDepth(1);
             }
 
             if (name === 'candy') {
