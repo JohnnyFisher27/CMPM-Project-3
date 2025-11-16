@@ -4,6 +4,7 @@ import {Monster} from "../gameobjects/monster.js";
 import {Spike} from "../gameobjects/spike.js";
 import {FallingPlatform} from "../gameobjects/fallingPlatform.js";
 import {MovingPlatform} from "../gameobjects/movingPlatform.js";
+import {AppearingSpike} from "../gameobjects/appearingSpike.js";
 
 export class Start extends Phaser.Scene {
 
@@ -94,7 +95,9 @@ export class Start extends Phaser.Scene {
             }
 
             if (name === 'appearingSpike') {
-
+                let which = data.properties[0].name;
+                const appearingSpike = new AppearingSpike({scene: this, x, y, dataLayer, which, player: this.player});
+                appearingSpike.setDepth(1);
             }
 
             if (name === 'spike') {

@@ -1,6 +1,6 @@
 import {Collider} from "./collider.js";
 
-export class FallingSpike extends Phaser.GameObjects.Sprite {
+export class AppearingSpike extends Phaser.GameObjects.Sprite {
     constructor({
         scene,
         x = 0,
@@ -14,9 +14,9 @@ export class FallingSpike extends Phaser.GameObjects.Sprite {
     }) 
     
     {
-        super(scene, x, y, 'fallingSpike');
+        super(scene, x, y, 'appearingSpike');
         this.setOrigin(0, 1);
-        this.setName(name || 'fallingSpike');
+        this.setName(name || 'appearingSpike');
 
         if (addToScene) {
             scene.add.existing(this);
@@ -26,6 +26,8 @@ export class FallingSpike extends Phaser.GameObjects.Sprite {
             scene.physics.add.existing(this);
             this.body.setAllowGravity(false);
             this.body.setImmovable(true);
+            this.setActive(false);
+            this.setVisible(false);
         }
 
         dataLayer.objects.forEach((data) => {
@@ -34,23 +36,10 @@ export class FallingSpike extends Phaser.GameObjects.Sprite {
             if (name === 'collider') {
                 if (data.properties[0].name === which) {
                     const collider = new Collider({scene, x, y});
-                    const { y: spikeY } = this.y;
                     scene.physics.add.overlap(collider, player,
                         () => {
-                            if (!this.body.allowGravity) {
-                                this.body.setAllowGravity(true);
-                                this.body.setGravityY(1200);
-                                scene.time.delayedCall(5000, () => {
-                                    this.body.setAllowGravity(false);
-
-                                    this.body.setAcceleration(0, 0);
-                                    this.body.setVelocity(0, 0);
-                                    this.setY(spikeY);                  //places the spike offscreen, should move it more off screen though
-                                                                        //maybe add a crashing sound into the ground
-                                    this.setActive(false);
-                                    this.setVisible(false);
-                                });
-                            }
+                            this.setActive(true);
+                            this.setVisible(true);
                         }
                     );
 
