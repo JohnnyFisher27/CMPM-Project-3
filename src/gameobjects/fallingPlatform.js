@@ -28,7 +28,7 @@ export class FallingPlatform extends Phaser.GameObjects.Sprite {
         scene.physics.add.collider(this, player,
             () => {
                 if (player.body.blocked.down) {
-                    scene.tweens.add({
+                    /*scene.tweens.add({        //turned off the shake before drop, it wasn't working correctly
                         targets: this,
                         yoyo: true,
                         repeat: 10,
@@ -38,19 +38,19 @@ export class FallingPlatform extends Phaser.GameObjects.Sprite {
                         },
                         ease: 'Linear',
                         duration: 50,
-                        onComplete: function() {
+                        onComplete: () => {*/
                             scene.tweens.add({
                                 targets: this,
                                 alpha: 0,
                                 y: "+=25",
                                 ease: 'Linear',
                                 duration: 100,
-                                onComplete: function() {
+                                onComplete: () => {
                                     this.destroy();
                                 }
                             });
-                        }
-                    });
+                        /*}
+                    });*/
                 }
             }
         );
