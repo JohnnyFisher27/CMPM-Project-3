@@ -30,6 +30,11 @@ export class Start extends Phaser.Scene {
         this.load.image('candy', 'assets/Tiles/Default/tile_0102.png');
         this.load.image('fallingSpike', 'assets/Tiles/Default/tile_0166.png');
         this.load.image('fallingPlatform', 'assets/Tiles/Default/tile_0250.png');
+        this.load.image('fallingPlatform', 'assets/Tiles/Default/tile_0276.png');
+        this.load.image('fallingPlatform', 'assets/Tiles/Default/tile_0111.png');
+        this.load.image('fallingPlatform', 'assets/Tiles/Default/tile_0116.png');
+        this.load.image('appearingPlatform', 'assets/Tiles/Default/tile_0049.png');
+        this.load.image('checkpoint', 'assets/Tiles/Default/tile_0041.png');
         this.load.image('spike', 'assets/Tiles/Default/tile_0183.png');
         this.load.image('monster', 'assets/Tiles/Default/tile_0340.png');
 
