@@ -74,7 +74,9 @@ export class Start extends Phaser.Scene {
 
         //this.map.createLayer("Background", tileset, 0, 0);
         this.layer = this.map.createLayer("Ground", tileset, 0, 26);
+        this.layer2 = this.map.createLayer("Background", tileset, 0, 26);
         this.layer.setDepth(0);
+        this.layer2.setDepth(0);
         this.layer.setCollisionBetween(1, 5600);
         this.physics.add.collider(this.layer, this.player);
         this.physics.world.TILE_BIAS = 150;
@@ -85,7 +87,7 @@ export class Start extends Phaser.Scene {
         this.right = this.input.keyboard.addKey("D", false, true);
 
         //this.cameras.main.centerOn(this.player.x + 300, this.player.y - 110);       //this needs a lot of work
-        this.cameras.main.zoom = 1.3;
+        this.cameras.main.zoom = 2;
         this.cameras.main.startFollow(this.player, true, 0.5, 0.5, 0, 100);
         this.cameras.main.setDeadzone(200, 800);
 
