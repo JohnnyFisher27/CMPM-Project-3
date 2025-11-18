@@ -25,6 +25,8 @@ export class Start extends Phaser.Scene {
         );
 
         this.load.image('bullet', 'assets/Player_Tiles/tile_0044.png');
+        this.load.image('bullet_fire', 'assets/Player_Tiles/tile_0043.png');
+
         this.load.image('platform', 'assets/Tiles/Default/tile_0145.png');
         this.load.image('collider', 'assets/Tiles/Default/tile_0001.png');
         this.load.image('candy', 'assets/Tiles/Default/tile_0102.png');
@@ -44,6 +46,7 @@ export class Start extends Phaser.Scene {
         this.load.audio('jump', 'assets/Jump3.wav');
         this.load.audio('boom', 'assets/Boom8.wav');
         this.load.audio('collect', 'assets/Pickup3.wav');
+        this.load.audio('move', 'assets/Random17.wav');
     }
 
     create() {
@@ -53,6 +56,7 @@ export class Start extends Phaser.Scene {
         this.doublejump = 3;
         this.canJump = false;
         this.flipSprite = true;
+        this.moving = false;
 
         this.player = this.physics.add.sprite(4200, 500, 'player_nor');
         this.player.setDepth(2);
@@ -169,7 +173,7 @@ export class Start extends Phaser.Scene {
                 this.canJump = false;
                 this.doublejump -= 1;
                 this.player.body.setVelocityY(-300);
-                this.cameras.main.shake(300, 0.005);
+                this.cameras.main.shake(200, 0.0025);
                 this.shoot()
                 if (this.left.isDown) {
                         this.player.angle = -90;
@@ -188,6 +192,8 @@ export class Start extends Phaser.Scene {
         }
        
         if (this.left.isDown) {
+            this.moving = true;
+            //this.sound.play('move', {loop: true}) fix this tomorrow
             this.player.body.setAccelerationX(-300);
             this.player.flipX = true;
         }
@@ -202,7 +208,7 @@ export class Start extends Phaser.Scene {
 
 
         if (this.right.isDown) {
-            
+            this.moving = true;
             this.player.body.setAccelerationX(300);
             this.player.flipX = false;
             
@@ -234,6 +240,12 @@ export class Start extends Phaser.Scene {
             this.grounded = true;
         }
 
+        if (this.hasTaken) {
+            this.sound.play('collect');
+            console.log("HI")
+            this.hasTaken = false;
+        }
+
     }
     
     disappearBullet(bullet) {
@@ -244,11 +256,17 @@ export class Start extends Phaser.Scene {
 
     //create bullet object
     shoot() {
-        this.sound.play('shoot')
+        this.sound.play('shoot');
         var bullet = this.physics.add.sprite(this.player.x, this.player.y, 'bullet');
+        var bullet_fire = this.add.sprite(this.player.x, this.player.y, 'bullet_fire');
         bullet.setScale(0.3);
+        bullet_fire.setScale(0.5);
         bullet.angle = 90;
+        bullet_fire.angle = 90;
         bullet.body.setVelocityY(500);
+        this.time.delayedCall(50, () => {
+            bullet_fire.destroy(); 
+            }, [], this);
         this.physics.add.collider(this.layer, bullet, this.disappearBullet, null, this);
 
     }
