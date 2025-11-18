@@ -145,7 +145,7 @@ export class Start extends Phaser.Scene {
 
         if (this.player.body.velocity.y > 0)        //jump system
         {
-            this.player.body.setGravityY(1200);
+            this.player.body.setGravityY(1150);
         }
         else
         {
@@ -191,7 +191,7 @@ export class Start extends Phaser.Scene {
             this.player.body.setAccelerationX(-300);
             this.player.flipX = true;
         }
-        if (this.player.body.velocity.x < -200) {       //cap movement speed
+        if (this.player.body.velocity.x < -180) {       //cap movement speed
             this.player.body.setAccelerationX(0);
         }
         if (this.left.isUp && this.player.body.velocity.x < 0) {    //slow player down
@@ -207,7 +207,7 @@ export class Start extends Phaser.Scene {
             this.player.flipX = false;
             
         }
-        if (this.player.body.velocity.x > 200) {        //cap movement speed
+        if (this.player.body.velocity.x > 180) {        //cap movement speed
             this.player.body.setAccelerationX(0);
         }
         if (this.right.isUp && this.player.body.velocity.x > 0) {   //slow player down

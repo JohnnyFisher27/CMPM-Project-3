@@ -39,7 +39,7 @@ export class FallingSpike extends Phaser.GameObjects.Sprite {
                         () => {
                             if (!this.body.allowGravity) {
                                 this.body.setAllowGravity(true);
-                                this.body.setGravityY(1200);
+                                this.body.setGravityY(1150);
                                 scene.time.delayedCall(5000, () => {
                                     this.body.setAllowGravity(false);
 
