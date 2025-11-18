@@ -4,6 +4,7 @@ export class FallingPlatform extends Phaser.GameObjects.Sprite {
         scene,
         x = 0,
         y = 0,
+        asset,
         player,
         enablePhysics = true,
         addToScene = true,
