@@ -148,30 +148,6 @@
                  "y":478.666666666667
                 }, 
                 {
-                 "gid":191,
-                 "height":16,
-                 "id":3,
-                 "name":"fallingPlatform",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":4512,
-                 "y":464.666666666667
-                }, 
-                {
-                 "gid":191,
-                 "height":16,
-                 "id":4,
-                 "name":"fallingPlatform",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":4528,
-                 "y":464.666666666667
-                }, 
-                {
                  "gid":167,
                  "height":16,
                  "id":5,
