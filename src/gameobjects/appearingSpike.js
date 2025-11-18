@@ -14,7 +14,7 @@ export class AppearingSpike extends Phaser.GameObjects.Sprite {
     }) 
     
     {
-        super(scene, x, y, 'appearingSpike');
+        super(scene, x, y, 'spike');
         this.setOrigin(0, 1);
         this.setName(name || 'appearingSpike');
 
