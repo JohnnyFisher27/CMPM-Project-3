@@ -104,12 +104,14 @@ export class Start extends Phaser.Scene {
 
             if (name === 'appearingSpike') {
                 let which = data.properties[0].name;
-                const appearingSpike = new AppearingSpike({scene: this, x, y, dataLayer, which, player: this.player});
+                let angle = data.rotation;
+                const appearingSpike = new AppearingSpike({scene: this, x, y, dataLayer, which, player: this.player, angle});
                 appearingSpike.setDepth(1);
             }
 
             if (name === 'spike') {
-                const spike = new Spike({scene: this, x, y, player: this.player});
+                let angle = data.rotation;
+                const spike = new Spike({scene: this, x, y, player: this.player, angle});
                 spike.setDepth(1);
             }
 

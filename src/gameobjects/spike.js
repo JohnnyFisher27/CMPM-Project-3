@@ -5,6 +5,7 @@ export class Spike extends Phaser.GameObjects.Sprite {
         x = 0,
         y = 0,
         player,
+        angle,
         enablePhysics = true,
         addToScene = true,
         name,
@@ -14,6 +15,7 @@ export class Spike extends Phaser.GameObjects.Sprite {
         super(scene, x, y, 'spike');
         this.setOrigin(0, 1);
         this.setName(name || 'spike');
+        this.angle = angle;
 
         if (addToScene) {
             scene.add.existing(this);

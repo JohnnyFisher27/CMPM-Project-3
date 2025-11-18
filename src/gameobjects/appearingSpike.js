@@ -8,6 +8,7 @@ export class AppearingSpike extends Phaser.GameObjects.Sprite {
         dataLayer,
         which,
         player,
+        angle,
         enablePhysics = true,
         addToScene = true,
         name,
@@ -17,6 +18,7 @@ export class AppearingSpike extends Phaser.GameObjects.Sprite {
         super(scene, x, y, 'spike');
         this.setOrigin(0, 1);
         this.setName(name || 'appearingSpike');
+        this.angle = angle;
 
         if (addToScene) {
             scene.add.existing(this);
