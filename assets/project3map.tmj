@@ -530,6 +530,12 @@
                  "height":16,
                  "id":31,
                  "name":"fallingPlatform",
+                 "properties":[
+                        {
+                         "name":"fallingPlat1",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -542,6 +548,12 @@
                  "height":16,
                  "id":32,
                  "name":"fallingPlatform",
+                 "properties":[
+                        {
+                         "name":"fallingPlat1",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -554,6 +566,12 @@
                  "height":16,
                  "id":33,
                  "name":"fallingPlatform",
+                 "properties":[
+                        {
+                         "name":"fallingPlat1",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -998,6 +1016,12 @@
                  "height":16,
                  "id":97,
                  "name":"fallingPlatform",
+                 "properties":[
+                        {
+                         "name":"fallingPlat2",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -1010,6 +1034,12 @@
                  "height":16,
                  "id":98,
                  "name":"fallingPlatform",
+                 "properties":[
+                        {
+                         "name":"fallingPlat2",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -1022,6 +1052,12 @@
                  "height":16,
                  "id":99,
                  "name":"fallingPlatform",
+                 "properties":[
+                        {
+                         "name":"fallingPlat2",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -1466,6 +1502,12 @@
                  "height":16,
                  "id":148,
                  "name":"fallingPlatform",
+                 "properties":[
+                        {
+                         "name":"fallingPlat2",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -1478,6 +1520,12 @@
                  "height":16,
                  "id":149,
                  "name":"fallingPlatform",
+                 "properties":[
+                        {
+                         "name":"fallingPlat2",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -1490,6 +1538,12 @@
                  "height":16,
                  "id":150,
                  "name":"fallingPlatform",
+                 "properties":[
+                        {
+                         "name":"fallingPlat2",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -1502,6 +1556,12 @@
                  "height":16,
                  "id":151,
                  "name":"fallingPlatform",
+                 "properties":[
+                        {
+                         "name":"fallingPlat2",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -1514,6 +1574,12 @@
                  "height":16,
                  "id":152,
                  "name":"fallingPlatform",
+                 "properties":[
+                        {
+                         "name":"fallingPlat2",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -1526,6 +1592,12 @@
                  "height":16,
                  "id":153,
                  "name":"fallingPlatform",
+                 "properties":[
+                        {
+                         "name":"fallingPlat2",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -2522,6 +2594,12 @@
                  "height":16,
                  "id":239,
                  "name":"fallingPlatform",
+                 "properties":[
+                        {
+                         "name":"fallingPlat3",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -2534,6 +2612,12 @@
                  "height":16,
                  "id":240,
                  "name":"fallingPlatform",
+                 "properties":[
+                        {
+                         "name":"fallingPlat3",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -2546,6 +2630,12 @@
                  "height":16,
                  "id":241,
                  "name":"fallingPlatform",
+                 "properties":[
+                        {
+                         "name":"fallingPlat3",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -2558,6 +2648,12 @@
                  "height":16,
                  "id":242,
                  "name":"fallingPlatform",
+                 "properties":[
+                        {
+                         "name":"fallingPlat3",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -2570,6 +2666,12 @@
                  "height":16,
                  "id":243,
                  "name":"fallingPlatform",
+                 "properties":[
+                        {
+                         "name":"fallingPlat3",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -2582,6 +2684,12 @@
                  "height":16,
                  "id":244,
                  "name":"fallingPlatform",
+                 "properties":[
+                        {
+                         "name":"fallingPlat3",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -2594,6 +2702,12 @@
                  "height":16,
                  "id":245,
                  "name":"fallingPlatform",
+                 "properties":[
+                        {
+                         "name":"fallingPlat3",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -2606,6 +2720,12 @@
                  "height":16,
                  "id":246,
                  "name":"fallingPlatform",
+                 "properties":[
+                        {
+                         "name":"fallingPlat3",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -2618,6 +2738,12 @@
                  "height":16,
                  "id":247,
                  "name":"fallingPlatform",
+                 "properties":[
+                        {
+                         "name":"fallingPlat3",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -3090,7 +3216,7 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":291,
+ "nextobjectid":292,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
