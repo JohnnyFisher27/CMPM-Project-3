@@ -30,9 +30,9 @@ export class Start extends Phaser.Scene {
         this.load.image('candy', 'assets/Tiles/Default/tile_0102.png');
         this.load.image('fallingSpike', 'assets/Tiles/Default/tile_0166.png');
         this.load.image('fallingPlatform', 'assets/Tiles/Default/tile_0250.png');
-        this.load.image('fallingPlatform', 'assets/Tiles/Default/tile_0276.png');
-        this.load.image('fallingPlatform', 'assets/Tiles/Default/tile_0111.png');
-        this.load.image('fallingPlatform', 'assets/Tiles/Default/tile_0116.png');
+        this.load.image('fallingPlat1', 'assets/Tiles/Default/tile_0276.png');
+        this.load.image('fallingPlat2', 'assets/Tiles/Default/tile_0111.png');
+        this.load.image('fallingPlat3', 'assets/Tiles/Default/tile_0116.png');
         this.load.image('appearingPlatform', 'assets/Tiles/Default/tile_0049.png');
         this.load.image('checkpoint', 'assets/Tiles/Default/tile_0041.png');
         this.load.image('spike', 'assets/Tiles/Default/tile_0183.png');
@@ -113,6 +113,7 @@ export class Start extends Phaser.Scene {
             }
 
             if (name === 'fallingPlatform') {
+                let which = data.properties[0].name;
                 const fallingPlatform = new FallingPlatform({scene: this, x, y, player: this.player});
                 fallingPlatform.setDepth(1);
             }
