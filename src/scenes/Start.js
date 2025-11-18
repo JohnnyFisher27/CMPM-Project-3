@@ -43,6 +43,7 @@ export class Start extends Phaser.Scene {
         this.load.audio('shoot', 'assets/Hit9.wav');
         this.load.audio('jump', 'assets/Jump3.wav');
         this.load.audio('boom', 'assets/Boom8.wav');
+        this.load.audio('collect', 'assets/Pickup3.wav');
     }
 
     create() {
@@ -87,9 +88,9 @@ export class Start extends Phaser.Scene {
         this.right = this.input.keyboard.addKey("D", false, true);
 
         //this.cameras.main.centerOn(this.player.x + 300, this.player.y - 110);       //this needs a lot of work
-        this.cameras.main.zoom = 1.5;
+        this.cameras.main.zoom = 1.75;
         this.cameras.main.startFollow(this.player, true, 0.5, 0.5, 0, 100);
-        this.cameras.main.setDeadzone(200, 200);
+        this.cameras.main.setDeadzone(0, 100);
 
         const dataLayer = this.map.getObjectLayer('data');
         dataLayer.objects.forEach((data) => {

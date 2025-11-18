@@ -1,6 +1,7 @@
 
 export class Candy extends Phaser.GameObjects.Sprite {
     constructor({
+
         scene,
         x = 0,
         y = 0,
@@ -26,7 +27,8 @@ export class Candy extends Phaser.GameObjects.Sprite {
         }
         
         scene.physics.add.overlap(this, player, //not sure if this works inside the constructor or even inside the file
-            () => {                                 //if not we can move this to a preupdate or to the start file
+            () => {           
+                                    //if not we can move this to a preupdate or to the start file
                 this.destroy();
             }
         );
@@ -39,5 +41,7 @@ export class Candy extends Phaser.GameObjects.Sprite {
             hold: 100,
             y: "+=5"
         });
+    }
+    preload() {
     }
 }
