@@ -11,7 +11,7 @@ export class FallingPlatform extends Phaser.GameObjects.Sprite {
     }) 
     
     {
-        super(scene, x, y, 'fallingPlatform');
+        super(scene, x, y, asset);
         this.setOrigin(0, 1);
         this.setName(name || 'fallingPlatform');
 

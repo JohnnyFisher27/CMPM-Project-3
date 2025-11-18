@@ -113,7 +113,7 @@ export class Start extends Phaser.Scene {
             }
 
             if (name === 'fallingPlatform') {
-                let which = data.properties[0].name;
+                let asset = data.properties[0].name;
                 const fallingPlatform = new FallingPlatform({scene: this, x, y, player: this.player});
                 fallingPlatform.setDepth(1);
             }
