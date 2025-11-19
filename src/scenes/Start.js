@@ -69,7 +69,7 @@ export class Start extends Phaser.Scene {
         this.candyCount = 0;
         this.monsterCount = 0;
         
-        this.colliderMap = new Map();
+        this.colliderMap = new Map(); 
 
         this.map = this.add.tilemap('tiles');
         var tileset = this.map.addTilesetImage('monochrome_tilemap_packed', 'tilesheet');
@@ -107,13 +107,33 @@ export class Start extends Phaser.Scene {
     
         var dataLayer = this.map.getObjectLayer('data');
         
+        const getRobustKey = (obj) => {
+            if (!obj.properties || obj.properties.length === 0) 
+                return null;
+            if (obj.properties[0].value) 
+                return String(obj.properties[0].value);
+            
+            const namedProp = obj.properties.find(p => ['key', 'which', 'id'].includes(p.name));
+            if (namedProp) 
+                return String(namedProp.value);
+
+            return String(obj.properties[0].name);
+        };
+
         dataLayer.objects.forEach((data) => {
-            if (data.name === 'collider' && data.properties && data.properties.length > 0) {
-                const key = data.properties[0].value;
-                                this.colliderMap.set(String(key), data);
+            if (data.name === 'collider') {
+                const key = getRobustKey(data);
+                
+                if (key) {
+                    if (!this.colliderMap.has(key)) {
+                        this.colliderMap.set(key, []);
+                    }
+                    
+                    this.colliderMap.get(key).push(data);
+                }
             }
         });
-
+        
         dataLayer.objects.forEach((data) => {
             const { x, y, name, height, width } = data;         
 
@@ -151,7 +171,6 @@ export class Start extends Phaser.Scene {
         this.createPlayer();    
         this.scene.launch('UI');
     }
-
 
     update(time) {
         let dt = (time - this.last_time)/100;
@@ -272,13 +291,13 @@ export class Start extends Phaser.Scene {
 
     }
 
-    createPlayer()  {
+       createPlayer() {
         this.numBullets = 3;
         this.events.emit('updateBullets', this.numBullets);   
         this.player = this.physics.add.sprite(this.player_x, this.player_y, 'player_nor');
         this.player.setDepth(2);
-        this.player.setDragX(1000); // Decelerate quickly on ground
-        this.player.setMaxVelocity(180, 500); // Cap horizontal and vertical speed
+        this.player.setDragX(1000); 
+        this.player.setMaxVelocity(180, 500); 
 
         this.deathDelayEvent = null; 
 
@@ -294,19 +313,28 @@ export class Start extends Phaser.Scene {
         
         var dataLayer = this.map.getObjectLayer('data');
         
+        const getSpikeKey = (obj) => {
+            if (!obj.properties || obj.properties.length === 0) 
+                return null;
+            if (obj.properties[0].value) 
+                return String(obj.properties[0].value);
+            const namedProp = obj.properties.find(p => ['key', 'which', 'id'].includes(p.name));
+            if (namedProp) 
+                return String(namedProp.value);
+            return String(obj.properties[0].name);
+        };
+        
         dataLayer.objects.forEach((data) => {
             const { x, y, name, height, width } = data; 
 
-            const getSpikeKey = (obj) => {
-                if (!obj.properties || obj.properties.length === 0) {
-                    return null;
-                }
-                return String(obj.properties[0].value);
-            };
-            
             switch (name) {
                 case 'fallingPlatform':
-                    let asset = data.properties.length > 0 ? data.properties[0].value : 'platform'; 
+                    let asset = 'platform';
+                    if (data.properties && data.properties.length > 0) {
+                        const prop = data.properties[0];
+                        asset = prop.value ? String(prop.value) : prop.name;
+                    }
+                    
                     const fallingPlatform = new FallingPlatform({scene: this, x, y, asset, player: this.player});
                     fallingPlatform.setDepth(1);
                     this.playerInteractives.add(fallingPlatform);
@@ -315,24 +343,13 @@ export class Start extends Phaser.Scene {
 
                 case 'fallingSpike':
                     const fallingKey = getSpikeKey(data);
+                    const fallingColliders = this.colliderMap.get(fallingKey);
                     
-                    if (!fallingKey) {
-                        console.error("FallingSpike object is missing the required integer key property.", data);
-                        break;
-                    }
-                    
-                    const fallingColliderData = this.colliderMap.get(fallingKey); 
-                    
-                    if (!fallingColliderData) {
-                        console.error(`FallingSpike collider lookup failed. Key: "${fallingKey}" not found in colliderMap. Check Tiled property structure.`, data);
-                        break; 
-                    }
-
                     const fallingSpike = new FallingSpike({
                         scene: this, 
                         x, 
                         y, 
-                        colliderData: fallingColliderData, 
+                        colliderDataArray: fallingColliders, 
                         which: fallingKey, 
                         player: this.player
                     });
@@ -355,26 +372,14 @@ export class Start extends Phaser.Scene {
 
                 case 'appearingSpike':
                     const appearingKey = getSpikeKey(data);
-                    
-                    if (!appearingKey) {
-                        console.error("AppearingSpike object is missing the required integer key property.", data);
-                        break;
-                    }
-
                     let angle = data.rotation;
-                    
-                    const appearingColliderData = this.colliderMap.get(appearingKey); 
-
-                    if (!appearingColliderData) {
-                        console.error(`AppearingSpike collider lookup failed. Key: "${appearingKey}" not found in colliderMap. Check Tiled property structure.`, data);
-                        break; 
-                    }
+                    const appearingColliders = this.colliderMap.get(appearingKey); 
                     
                     const appearingSpike = new AppearingSpike({
                         scene: this, 
                         x, 
                         y, 
-                        colliderData: appearingColliderData, 
+                        colliderDataArray: appearingColliders, 
                         which: appearingKey, 
                         player: this.player, 
                         angle
@@ -389,6 +394,7 @@ export class Start extends Phaser.Scene {
             }
         });
     }
+
     destroyPlayer() {
         if (this.layerCollider) {
             this.physics.world.removeCollider(this.layerCollider);

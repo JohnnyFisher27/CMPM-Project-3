@@ -5,7 +5,7 @@ export class AppearingSpike extends Phaser.GameObjects.Sprite {
         scene,
         x = 0,
         y = 0,
-        colliderData, 
+        colliderDataArray, 
         which,
         player,
         angle,
@@ -32,37 +32,36 @@ export class AppearingSpike extends Phaser.GameObjects.Sprite {
             this.body.enable = false;
         }
 
-        this.colliderObject = null; 
-        this.overlapHandler = null; 
+        this.overlapHandlers = [];
+        this.colliders = [];
 
-        if (colliderData) {
-            const collider = new Collider({
-                scene, 
-                x: colliderData.x,
-                y: colliderData.y 
+        if (colliderDataArray) {
+            colliderDataArray.forEach((data) => {
+                
+                const collider = new Collider({scene, x: data.x, y: data.y});
+                this.colliders.push(collider); 
+                
+                const handler = scene.physics.add.overlap(collider, player,
+                    () => {
+                        this.body.enable = true;
+                        this.setVisible(true);
+                    }
+                );
+                this.overlapHandlers.push(handler);
             });
-            
-            this.colliderObject = collider; 
-            
-            this.overlapHandler = scene.physics.add.overlap(collider, player,
-                () => {
-                    this.body.enable = true;
-                    this.setVisible(true);
-                }
-            );
         }
     }
 
     destroy(fromScene) {
-        if (this.overlapHandler) {
-            this.scene.physics.world.removeCollider(this.overlapHandler);
-            this.overlapHandler = null;
-        }
-
-        if (this.colliderObject) {
-            this.colliderObject.destroy();
-            this.colliderObject = null;
-        }
+        this.overlapHandlers.forEach(handler => {
+            this.scene.physics.world.removeCollider(handler);
+        });
+        this.overlapHandlers = [];
+        
+        this.colliders.forEach(collider => {
+            collider.destroy();
+        });
+        this.colliders = [];
 
         super.destroy(fromScene);
     }
