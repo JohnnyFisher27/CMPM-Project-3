@@ -6,6 +6,7 @@ import {FallingPlatform} from "../gameobjects/fallingPlatform.js";
 import {MovingPlatform} from "../gameobjects/movingPlatform.js";
 import {AppearingSpike} from "../gameobjects/appearingSpike.js";
 import {UI} from '../scenes/UI.js';
+import { Checkpoint } from "../gameobjects/checkpoint.js";
 
 export class Start extends Phaser.Scene {
 
@@ -48,6 +49,8 @@ export class Start extends Phaser.Scene {
         this.load.audio('boom', 'assets/Boom8.wav');
         this.load.audio('collect', 'assets/Pickup3.wav');
         this.load.audio('move', 'assets/Random17.wav');
+        this.load.audio('checkpoint', 'assets/PowerUp7.wav');
+
     }
 
     create() {
@@ -57,6 +60,7 @@ export class Start extends Phaser.Scene {
         this.numBullets = 3;
         this.canJump = false;
         this.flipSprite = true;
+        this.checkpoint = false;
 
         this.hasTakenCandy = false;
         this.candyCount = 0;
@@ -144,6 +148,11 @@ export class Start extends Phaser.Scene {
                 const monster = new Monster({scene: this, x, y, player: this.player});
                 monster.setDepth(1);
             }
+
+            if (name === 'checkpoint') {
+                const checkpoint = new Checkpoint({scene: this, x, y, player: this.player});
+                checkpoint.setDepth(1);
+            }
         });
 
         this.scene.launch('UI');
@@ -163,8 +172,6 @@ export class Start extends Phaser.Scene {
             this.player.body.setGravityY(600);
         }
         if (isgrounded) {
-            this.events.emit('updateBullets', this.numBullets);   
-            this.numBullets = 3;
             this.player.angle = 0;
             if (this.jump.isDown && this.canJump) {
                 this.canJump = false;
@@ -259,7 +266,13 @@ export class Start extends Phaser.Scene {
             this.hasTakenMonster = false;
         }
 
+        if (this.checkpoint) {
+            this.numBullets = 3;
+            this.events.emit('updateBullets', this.numBullets);   
+            this.sound.play('checkpoint');
+            this.checkpoint = false;
 
+        }
 
     }
     

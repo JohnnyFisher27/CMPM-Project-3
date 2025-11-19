@@ -1,5 +1,5 @@
 
-export class Candy extends Phaser.GameObjects.Sprite {
+export class Checkpoint extends Phaser.GameObjects.Sprite {
     constructor({
 
         scene,
@@ -12,9 +12,9 @@ export class Candy extends Phaser.GameObjects.Sprite {
     }) 
     
     {
-        super(scene, x, y, 'candy');
+        super(scene, x, y, 'checkpoint');
         this.setOrigin(0, 1);
-        this.setName(name || 'candy');
+        this.setName(name || 'checkpoint');
 
         if (addToScene) {
             scene.add.existing(this);
@@ -28,8 +28,9 @@ export class Candy extends Phaser.GameObjects.Sprite {
         
         scene.physics.add.overlap(this, player, //not sure if this works inside the constructor or even inside the file
             () => {           
-                scene.hasTakenCandy = true;              //if not we can move this to a preupdate or to the start file
+                       //if not we can move this to a preupdate or to the start file
                 this.destroy();
+                scene.checkpoint = true;
             }
         );
 

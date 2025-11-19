@@ -1,4 +1,4 @@
-
+import { GameOver } from "../scenes/GameOver.js";
 export class Spike extends Phaser.GameObjects.Sprite {
     constructor({
         scene,
@@ -29,7 +29,8 @@ export class Spike extends Phaser.GameObjects.Sprite {
 
         scene.physics.add.overlap(this, player,
             () => {
-                //hurt or kill player
+                this.scene.scene.stop();
+                this.scene.scene.start("GameOver");
             }
         );
     }
