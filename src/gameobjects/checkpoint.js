@@ -31,6 +31,8 @@ export class Checkpoint extends Phaser.GameObjects.Sprite {
                        //if not we can move this to a preupdate or to the start file
                 this.destroy();
                 scene.checkpoint = true;
+                scene.player_x = x;
+                scene.player_y = y;
             }
         );
 

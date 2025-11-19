@@ -29,8 +29,8 @@ export class Spike extends Phaser.GameObjects.Sprite {
 
         scene.physics.add.overlap(this, player,
             () => {
-                this.scene.scene.stop();
-                this.scene.scene.start("GameOver");
+                scene.destroyPlayer();
+                scene.createPlayer();
             }
         );
     }

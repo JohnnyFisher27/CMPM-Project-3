@@ -54,6 +54,9 @@ export class Start extends Phaser.Scene {
     }
 
     create() {
+        this.player_x = 4450;
+        this.player_y = 500;
+
         this.coyote = false;
         this.coyote_start = 0;
         this.grounded = false;
@@ -67,16 +70,6 @@ export class Start extends Phaser.Scene {
         this.hasTakenMonster = false;
         this.monsterCount = 0;
 
-        this.player = this.physics.add.sprite(4450, 500, 'player_nor');
-        this.player.setDepth(2);
-
-        this.anims.create({
-            key: "walk",
-            frames: this.anims.generateFrameNumbers('player_nor', {start: 0, end: 2}),
-            frameRate: 6,
-            repeat: -1
-        });        
-
         /*var disappearing_platform = this.physics.add.image(700, 500, 'platform')
             .setImmovable(true)
 
@@ -86,13 +79,11 @@ export class Start extends Phaser.Scene {
         this.map = this.add.tilemap('tiles');
         var tileset = this.map.addTilesetImage('monochrome_tilemap_packed', 'tilesheet');
 
-        //this.map.createLayer("Background", tileset, 0, 0);
         this.layer = this.map.createLayer("Ground", tileset, 0, 26);
         this.layer2 = this.map.createLayer("Background", tileset, 0, 26);
         this.layer.setDepth(0);
         this.layer2.setDepth(0);
         this.layer.setCollisionBetween(1, 5600);
-        this.physics.add.collider(this.layer, this.player);
         this.physics.world.TILE_BIAS = 150;
 
         this.jump = this.input.keyboard.addKey("Space", false, true);
@@ -101,9 +92,8 @@ export class Start extends Phaser.Scene {
         this.right = this.input.keyboard.addKey("D", false, true);
 
         //this.cameras.main.centerOn(this.player.x + 300, this.player.y - 110);       //this needs a lot of work
-        this.cameras.main.zoom = 1.75;
-        this.cameras.main.startFollow(this.player, true, 0.5, 0.5, 0, 50);
-        this.cameras.main.setDeadzone(0, 0);
+    
+        this.createPlayer();    
 
         const dataLayer = this.map.getObjectLayer('data');
         dataLayer.objects.forEach((data) => {
@@ -275,11 +265,34 @@ export class Start extends Phaser.Scene {
         }
 
     }
-    
+
+    createPlayer() {
+        this.numBullets = 3;
+        this.events.emit('updateBullets', this.numBullets);   
+        this.player = this.physics.add.sprite(this.player_x, this.player_y, 'player_nor');
+        this.player.setDepth(2);
+
+        this.anims.create({
+            key: "walk",
+            frames: this.anims.generateFrameNumbers('player_nor', {start: 0, end: 2}),
+            frameRate: 6,
+            repeat: -1
+        });  
+
+        this.cameras.main.zoom = 1.75;
+        this.cameras.main.startFollow(this.player, true, 0.5, 0.5, 0, 50);
+        this.cameras.main.setDeadzone(0, 0);
+        this.physics.add.collider(this.layer, this.player);
+
+    }
+
+    destroyPlayer() {
+        this.player.destroy();
+    }
+
     disappearBullet(bullet) {
         this.sound.play('boom')
         bullet.destroy();
-            
     }
 
     //create bullet object
