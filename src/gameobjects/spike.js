@@ -27,6 +27,19 @@ export class Spike extends Phaser.GameObjects.Sprite {
             this.body.setImmovable(true);
         }
 
+        if (angle == -90) {
+            this.body.setOffset(-12, 0);
+        }
+        if (angle == 90) {
+            this.body.setOffset(-3, 16);
+        }
+        if (angle == 180 || angle == -180) {
+            this.body.setOffset(-16, 12);
+        }
+        if (angle == 0) {
+            this.body.setOffset(0, 4);
+        }
+
         /*scene.physics.add.overlap(this, player,
             () => {
                 scene.destroyPlayer();
