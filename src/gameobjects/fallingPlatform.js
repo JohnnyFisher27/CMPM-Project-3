@@ -24,6 +24,7 @@ export class FallingPlatform extends Phaser.GameObjects.Sprite {
             scene.physics.add.existing(this);
             this.body.setAllowGravity(false);
             this.body.setImmovable(true);
+            
         }
 
         scene.physics.add.collider(this, player,
@@ -61,5 +62,13 @@ export class FallingPlatform extends Phaser.GameObjects.Sprite {
                 this.destroy();
             }
         );*/
+    }
+
+    reset() {
+        this.body.reset(this.x, this.y);
+        this.body.setAllowGravity(false);
+        this.body.setImmovable(true);
+        this.setVisible(true); // If it became invisible after falling
+        this.setActive(true);  // If it was deactivated
     }
 }

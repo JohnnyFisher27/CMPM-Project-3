@@ -26,7 +26,7 @@ export class Checkpoint extends Phaser.GameObjects.Sprite {
             this.body.setImmovable(true);
         }
         
-        scene.physics.add.overlap(this, player, //not sure if this works inside the constructor or even inside the file
+        /*scene.physics.add.overlap(this, player, //not sure if this works inside the constructor or even inside the file
             () => {           
                        //if not we can move this to a preupdate or to the start file
                 this.destroy();
@@ -34,7 +34,7 @@ export class Checkpoint extends Phaser.GameObjects.Sprite {
                 scene.player_x = x;
                 scene.player_y = y;
             }
-        );
+        );*/
 
         scene.tweens.add({           //have not tested this yet, hope it moves up and down nicely
             targets: this,     //so the player knows to interact with it

@@ -86,6 +86,8 @@ export class Start extends Phaser.Scene {
         this.layer.setCollisionBetween(1, 5600);
         this.physics.world.TILE_BIAS = 150;
 
+        this.playerInteractives = this.physics.add.group();
+
         this.jump = this.input.keyboard.addKey("Space", false, true);
         //this.down = this.input.keyboard.addKey("S", false, true);
         this.left = this.input.keyboard.addKey("A", false, true);
@@ -103,6 +105,9 @@ export class Start extends Phaser.Scene {
                 let which = data.properties[0].name;
                 const fallingSpike = new FallingSpike({scene: this, x, y, dataLayer, which, player: this.player});
                 fallingSpike.setDepth(1);
+                this.playerInteractives.add(fallingSpike);
+                fallingSpike.body.setAllowGravity(false); 
+                fallingSpike.body.setImmovable(true);
             }
 
             if (name === 'appearingSpike') {
@@ -110,18 +115,28 @@ export class Start extends Phaser.Scene {
                 let angle = data.rotation;
                 const appearingSpike = new AppearingSpike({scene: this, x, y, dataLayer, which, player: this.player, angle});
                 appearingSpike.setDepth(1);
+                this.playerInteractives.add(appearingSpike);
+                appearingSpike.body.setAllowGravity(false); 
+                appearingSpike.body.setImmovable(true);
             }
 
             if (name === 'spike') {
                 let angle = data.rotation;
                 const spike = new Spike({scene: this, x, y, player: this.player, angle});
                 spike.setDepth(1);
+                this.playerInteractives.add(spike);
+                spike.body.setAllowGravity(false); 
+                spike.body.setImmovable(true);
             }
 
             if (name === 'fallingPlatform') {
                 let asset = data.properties[0].name;
                 const fallingPlatform = new FallingPlatform({scene: this, x, y, asset, player: this.player});
                 fallingPlatform.setDepth(1);
+                this.playerInteractives.add(fallingPlatform);
+                fallingPlatform.body.setAllowGravity(false); 
+                fallingPlatform.body.setImmovable(true);
+                
             }
 
             if (name === 'movingPlatform') {
@@ -132,16 +147,25 @@ export class Start extends Phaser.Scene {
             if (name === 'candy') {
                 const candy = new Candy({scene: this, x, y, player: this.player});
                 candy.setDepth(1);
+                this.playerInteractives.add(candy);
+                candy.body.setAllowGravity(false); 
+                candy.body.setImmovable(true);
             }
 
             if (name === 'monster') {
                 const monster = new Monster({scene: this, x, y, player: this.player});
                 monster.setDepth(1);
+                this.playerInteractives.add(monster);
+                monster.body.setAllowGravity(false); 
+                monster.body.setImmovable(true);
             }
 
             if (name === 'checkpoint') {
                 const checkpoint = new Checkpoint({scene: this, x, y, player: this.player});
                 checkpoint.setDepth(1);
+                this.playerInteractives.add(checkpoint);
+                checkpoint.body.setAllowGravity(false); 
+                checkpoint.body.setImmovable(true);
             }
         });
 
@@ -283,11 +307,56 @@ export class Start extends Phaser.Scene {
         this.cameras.main.startFollow(this.player, true, 0.5, 0.5, 0, 50);
         this.cameras.main.setDeadzone(0, 0);
         this.physics.add.collider(this.layer, this.player);
+        this.physics.add.overlap(this.player, this.playerInteractives, this.handlePlayerInteraction, null, this);
 
     }
 
     destroyPlayer() {
         this.player.destroy();
+    }
+     
+    handlePlayerInteraction(player, object) {
+        if (object.name === 'spike') {
+            this.respawnPlayer();
+        }
+        else if (object.name === 'checkpoint') {
+        
+            this.player_x = object.x;
+            this.player_y = object.y;
+            this.checkpoint = true;
+            object.destroy();
+        }
+        else if (object.name === 'candy') {
+            this.hasTakenCandy = true; 
+            object.destroy();
+        }
+        else if (object.name === 'monster') {
+            this.hasTakenMonster = true; 
+            object.destroy();
+        }
+        else if (object.name === 'fallingPlatform') {
+            this.tweens.add({
+                targets: this,
+                alpha: 0,
+                y: "+=25",
+                ease: 'Linear', 
+                duration: 100,
+                onComplete: () => {
+                    object.destroy();
+                                }
+                });
+        }
+    }
+
+    respawnPlayer() {
+        this.destroyPlayer();
+
+        this.playerInteractives.getChildren().forEach(object => {
+            if (object.name === 'fallingPlatform' && typeof object.reset === 'function') {
+            object.reset(); 
+            }
+        });
+        this.createPlayer();
     }
 
     disappearBullet(bullet) {

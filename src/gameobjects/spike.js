@@ -27,11 +27,11 @@ export class Spike extends Phaser.GameObjects.Sprite {
             this.body.setImmovable(true);
         }
 
-        scene.physics.add.overlap(this, player,
+        /*scene.physics.add.overlap(this, player,
             () => {
                 scene.destroyPlayer();
                 scene.createPlayer();
             }
-        );
+        );*/
     }
 }
