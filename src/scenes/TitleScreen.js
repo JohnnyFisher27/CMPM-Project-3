@@ -12,8 +12,13 @@ export class TitleScreen extends Phaser.Scene {
             fill: '#fff' 
         }).setOrigin(0.5);
 
-        this.add.text(650, 500, 'Press Space to start!', { 
+        this.add.text(650, 550, 'Press Space to start!', { 
             fontSize: '48px', 
+            fill: '#fff' 
+        }).setOrigin(0.5);
+
+        this.add.text(650, 200, 'Collect all monsters and candy to win.', { 
+            fontSize: '24px', 
             fill: '#fff' 
         }).setOrigin(0.5);
 

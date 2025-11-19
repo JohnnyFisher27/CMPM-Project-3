@@ -54,7 +54,7 @@ export class Start extends Phaser.Scene {
         this.coyote = false;
         this.coyote_start = 0;
         this.grounded = false;
-        this.doublejump = 3;
+        this.numBullets = 3;
         this.canJump = false;
         this.flipSprite = true;
 
@@ -63,7 +63,7 @@ export class Start extends Phaser.Scene {
         this.hasTakenMonster = false;
         this.monsterCount = 0;
 
-        this.player = this.physics.add.sprite(4200, 500, 'player_nor');
+        this.player = this.physics.add.sprite(4450, 500, 'player_nor');
         this.player.setDepth(2);
 
         this.anims.create({
@@ -163,7 +163,8 @@ export class Start extends Phaser.Scene {
             this.player.body.setGravityY(600);
         }
         if (isgrounded) {
-            this.doublejump = 3;
+            this.events.emit('updateBullets', this.numBullets);   
+            this.numBullets = 3;
             this.player.angle = 0;
             if (this.jump.isDown && this.canJump) {
                 this.canJump = false;
@@ -176,9 +177,9 @@ export class Start extends Phaser.Scene {
             }
         }
         else {
-            if (this.jump.isDown && this.canJump && this.doublejump > 0) {      //doublejump
+            if (this.jump.isDown && this.canJump && this.numBullets > 0) {      //double jump
                 this.canJump = false;
-                this.doublejump -= 1;
+                this.numBullets -= 1;
                 this.player.body.setVelocityY(-300);
                 this.cameras.main.shake(200, 0.0025);
                 this.shoot()
@@ -258,6 +259,8 @@ export class Start extends Phaser.Scene {
             this.hasTakenMonster = false;
         }
 
+
+
     }
     
     disappearBullet(bullet) {
@@ -280,6 +283,8 @@ export class Start extends Phaser.Scene {
             bullet_fire.destroy(); 
             }, [], this);
         this.physics.add.collider(this.layer, bullet, this.disappearBullet, null, this);
+        this.events.emit('updateBullets', this.numBullets);   
+
 
     }
 

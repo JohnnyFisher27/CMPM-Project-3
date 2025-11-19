@@ -8,10 +8,19 @@ export class UI extends Phaser.Scene {
     preload() {
         this.load.image('candy', 'assets/Tiles/Default/tile_0102.png');
         this.load.image('monster', 'assets/Tiles/Default/tile_0340.png');
+        this.load.image('gun', 'assets/Player_Tiles/tile_0050.png');
+
 
     }
 
     create() {
+        this.gun1 = this.add.image(0, 690, 'gun').setOrigin(0);
+        this.gun1.setScale(2.5);
+        this.gun2 = this.add.image(30, 690, 'gun').setOrigin(0);
+        this.gun2.setScale(2.5);
+        this.gun3 = this.add.image(60, 690, 'gun').setOrigin(0);
+        this.gun3.setScale(2.5);
+
         var candy = this.add.image(0, 0, 'candy').setOrigin(0);
         candy.setScale(1.5);
         
@@ -32,7 +41,7 @@ export class UI extends Phaser.Scene {
         if (gameScene) {
             gameScene.events.on('updateCandy', this.updateCandyDisplay, this);
             gameScene.events.on('updateMonster', this.updateMonsterDisplay, this);
-
+            gameScene.events.on('updateBullets', this.updateBulletDisplay, this);
         }
     }
 
@@ -43,6 +52,33 @@ export class UI extends Phaser.Scene {
     updateMonsterDisplay(count) {
         this.monsterText.setText(`:${count}`);
     }
+    
+    updateBulletDisplay(count) {
+        this.gun1.destroy();
+        this.gun2.destroy();
+        this.gun3.destroy();
+        if (count == 3) {
+            this.gun1 = this.add.image(0, 690, 'gun').setOrigin(0);
+            this.gun1.setScale(2.5);
+            this.gun2 = this.add.image(30, 690, 'gun').setOrigin(0);
+            this.gun2.setScale(2.5);
+            this.gun3 = this.add.image(60, 690, 'gun').setOrigin(0);
+            this.gun3.setScale(2.5);
+        }
+        else if (count == 2) {
+            this.gun1 = this.add.image(0, 690, 'gun').setOrigin(0);
+            this.gun1.setScale(2.5);
+            this.gun2 = this.add.image(30, 690, 'gun').setOrigin(0);
+            this.gun2.setScale(2.5);
+        }
+        else if (count == 1) {
+            this.gun1 = this.add.image(0, 690, 'gun').setOrigin(0);
+            this.gun1.setScale(2.5);
+        }
+
+    }
+
+
 
     shutdown() {
         let gameScene = this.scene.get('Start');
