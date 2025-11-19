@@ -27,6 +27,7 @@ export class Monster extends Phaser.GameObjects.Sprite {
 
         scene.physics.add.overlap(this, player,
             () => {
+                scene.hasTakenMonster = true;
                 this.destroy();
             }
         );

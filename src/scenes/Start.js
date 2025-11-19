@@ -5,6 +5,7 @@ import {Spike} from "../gameobjects/spike.js";
 import {FallingPlatform} from "../gameobjects/fallingPlatform.js";
 import {MovingPlatform} from "../gameobjects/movingPlatform.js";
 import {AppearingSpike} from "../gameobjects/appearingSpike.js";
+import {UI} from '../scenes/UI.js';
 
 export class Start extends Phaser.Scene {
 
@@ -56,7 +57,11 @@ export class Start extends Phaser.Scene {
         this.doublejump = 3;
         this.canJump = false;
         this.flipSprite = true;
-        this.hasTaken = false;
+
+        this.hasTakenCandy = false;
+        this.candyCount = 0;
+        this.hasTakenMonster = false;
+        this.monsterCount = 0;
 
         this.player = this.physics.add.sprite(4200, 500, 'player_nor');
         this.player.setDepth(2);
@@ -140,6 +145,8 @@ export class Start extends Phaser.Scene {
                 monster.setDepth(1);
             }
         });
+
+        this.scene.launch('UI');
     }
 
     update(time) {
@@ -236,10 +243,19 @@ export class Start extends Phaser.Scene {
             this.coyote = false;
             this.grounded = true;
         }
-
-        if (this.hasTaken) {
+        // 16 total
+        if (this.hasTakenCandy) {
             this.sound.play('collect');
-            this.hasTaken = false;
+            this.candyCount += 1;
+            this.events.emit('updateCandy', this.candyCount);            
+            this.hasTakenCandy = false;
+        }
+        // 5 total
+        if (this.hasTakenMonster) {
+            this.sound.play('collect');
+            this.monsterCount += 1;
+            this.events.emit('updateMonster', this.monsterCount);            
+            this.hasTakenMonster = false;
         }
 
     }

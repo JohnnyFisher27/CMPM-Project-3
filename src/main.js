@@ -1,5 +1,7 @@
 import { Start } from './scenes/Start.js';
 import { GameOver } from './scenes/GameOver.js';
+import { TitleScreen } from './scenes/TitleScreen.js';
+import { UI } from './scenes/UI.js';
 
 const config = {
     type: Phaser.AUTO,
@@ -21,7 +23,7 @@ const config = {
         }
     },
     scene: [
-        Start, GameOver
+        TitleScreen, Start, UI, GameOver
     ],
     scale: {
         mode: Phaser.Scale.FIT,
