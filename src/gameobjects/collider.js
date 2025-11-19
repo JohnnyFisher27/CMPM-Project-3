@@ -25,4 +25,7 @@ export class Collider extends Phaser.GameObjects.Sprite {
             this.setVisible(false);
         }
     }
+    destroy(fromScene) {
+        super.destroy(fromScene);
+    }
 }

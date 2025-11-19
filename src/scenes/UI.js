@@ -78,13 +78,4 @@ export class UI extends Phaser.Scene {
 
     }
 
-
-
-    shutdown() {
-        let gameScene = this.scene.get('Start');
-        if (gameScene) {
-            console.log("shutdown")
-            gameScene.events.off('updateCandy', this.updateCandyDisplay, this);
-        }
-    }
 }   

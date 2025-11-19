@@ -5,7 +5,7 @@ export class AppearingSpike extends Phaser.GameObjects.Sprite {
         scene,
         x = 0,
         y = 0,
-        dataLayer,
+        colliderData, 
         which,
         player,
         angle,
@@ -32,27 +32,38 @@ export class AppearingSpike extends Phaser.GameObjects.Sprite {
             this.body.enable = false;
         }
 
-        dataLayer.objects.forEach((data) => {
-            const { x, y, name, height, width } = data;         
+        this.colliderObject = null; 
+        this.overlapHandler = null; 
 
-            if (name === 'collider') {
-                if (data.properties[0].name === which) {
-                    const collider = new Collider({scene, x, y});
-                    scene.physics.add.overlap(collider, player,
-                        () => {
-                            this.body.enable = true;
-                            this.setVisible(true);
-                        }
-                    );
-
-                    /*scene.physics.add.overlap(this, player,
-                        () => {
-                            
-                        }
-                    );*/
+        if (colliderData) {
+            const collider = new Collider({
+                scene, 
+                x: colliderData.x,
+                y: colliderData.y 
+            });
+            
+            this.colliderObject = collider; 
+            
+            this.overlapHandler = scene.physics.add.overlap(collider, player,
+                () => {
+                    this.body.enable = true;
+                    this.setVisible(true);
                 }
-            }
+            );
+        }
+    }
 
-        });
+    destroy(fromScene) {
+        if (this.overlapHandler) {
+            this.scene.physics.world.removeCollider(this.overlapHandler);
+            this.overlapHandler = null;
+        }
+
+        if (this.colliderObject) {
+            this.colliderObject.destroy();
+            this.colliderObject = null;
+        }
+
+        super.destroy(fromScene);
     }
 }

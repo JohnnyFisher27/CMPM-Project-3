@@ -16,6 +16,8 @@ export class FallingPlatform extends Phaser.GameObjects.Sprite {
         this.setOrigin(0, 1);
         this.setName(name || 'fallingPlatform');
 
+        this.currentTween = null; 
+
         if (addToScene) {
             scene.add.existing(this);
         }
@@ -27,48 +29,16 @@ export class FallingPlatform extends Phaser.GameObjects.Sprite {
             
         }
 
-        /*scene.physics.add.collider(this, player,
-            () => {
-                if (player.body.blocked.down) {
-                    scene.tweens.add({        //turned off the shake before drop, it wasn't working correctly
-                        targets: this,
-                        yoyo: true,
-                        repeat: 10,
-                        x: {
-                            from: x,
-                            to: x + 2 * 1,
-                        },
-                        ease: 'Linear',
-                        duration: 50,
-                        onComplete: () => {
-                            scene.tweens.add({
-                                targets: this,
-                                alpha: 0,
-                                y: "+=25",
-                                ease: 'Linear',
-                                duration: 100,
-                                onComplete: () => {
-                                    this.destroy();
-                                }
-                            });
-                        }
-                    });*
-                }
-            }
-        );
-        
-        scene.physics.add.overlap(this, player,
-            () => {
-                this.destroy();
-            }
-        );*/
+    }
+    
+    destroy(fromScene) {
+        if (this.currentTween) {
+            this.currentTween.stop();
+            this.currentTween.remove();
+            this.currentTween = null;
+        }
+
+        super.destroy(fromScene);
     }
 
-    reset() {
-        this.body.reset(this.x, this.y);
-        this.body.setAllowGravity(false);
-        this.body.setImmovable(true);
-        this.setVisible(true); // If it became invisible after falling
-        this.setActive(true);  // If it was deactivated
-    }
 }

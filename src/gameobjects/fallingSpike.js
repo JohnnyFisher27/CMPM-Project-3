@@ -5,7 +5,7 @@ export class FallingSpike extends Phaser.GameObjects.Sprite {
         scene,
         x = 0,
         y = 0,
-        dataLayer,
+        colliderData, 
         which,
         player,
         enablePhysics = true,
@@ -18,53 +18,65 @@ export class FallingSpike extends Phaser.GameObjects.Sprite {
         this.setOrigin(0, 1);
         this.setName(name || 'fallingSpike');
 
+        this.initialY = y; 
+        this.delayEvent = null; 
+        this.colliderObject = null;
+        this.overlapHandler = null; 
+
         if (addToScene) {
             scene.add.existing(this);
         }
 
-        if (enablePhysics) {
-            scene.physics.add.existing(this);
-            this.body.setAllowGravity(false);
-            this.body.setImmovable(true);
+        if (colliderData) {
+            const collider = new Collider({
+                scene, 
+                x: colliderData.x, 
+                y: colliderData.y 
+            });
+            this.colliderObject = collider; 
+
+            const spikeRef = this; 
+
+            this.overlapHandler = scene.physics.add.overlap(collider, player,
+                () => {
+                    if (!spikeRef.body.allowGravity) {
+                        spikeRef.body.setAllowGravity(true);
+                        spikeRef.body.setGravityY(1150);
+                        
+                        spikeRef.delayEvent = scene.time.delayedCall(5000, () => {
+                            if (spikeRef.scene && spikeRef.body) {
+                                spikeRef.body.setAllowGravity(false);
+                                spikeRef.body.setAcceleration(0, 0);
+                                spikeRef.body.setVelocity(0, 0);
+                                
+                                spikeRef.setY(spikeRef.initialY); 
+                                spikeRef.body.enable = false;
+                                spikeRef.setVisible(false);
+                            }
+                            spikeRef.delayEvent = null;
+                        });
+                    }
+                }
+            );
+        }
+    }
+
+    destroy(fromScene) {
+        if (this.overlapHandler) {
+            this.scene.physics.world.removeCollider(this.overlapHandler);
+            this.overlapHandler = null;
         }
 
-        dataLayer.objects.forEach((data) => {
-            const { x, y, name, height, width } = data;         
+        if (this.colliderObject) {
+            this.colliderObject.destroy();
+            this.colliderObject = null;
+        }
 
-            if (name === 'collider') {
-                if (data.properties[0].name === which) {
-                    const collider = new Collider({scene, x, y});
-                    const { y: spikeY } = this.y;
-                    scene.physics.add.overlap(collider, player,
-                        () => {
-                            if (!this.body.allowGravity) {
-                                this.body.setAllowGravity(true);
-                                this.body.setGravityY(1150);
-                                scene.time.delayedCall(5000, () => {
-                                    this.body.setAllowGravity(false);
+        if (this.delayEvent) {
+            this.delayEvent.remove(false);
+            this.delayEvent = null;
+        }
 
-                                    this.body.setAcceleration(0, 0);
-                                    this.body.setVelocity(0, 0);
-                                    this.setY(spikeY);                  //places the spike offscreen, should move it more off screen though
-                                                                        //maybe add a crashing sound into the ground
-                                    this.body.enable = false;
-                                    this.setVisible(false);
-                                });
-                            }
-                        }
-                    );
-
-                    /*
-                    scene.physics.add.overlap(this, player,
-                        () => {
-                            this.scene.scene.stop();
-                            this.scene.scene.start("GameOver");
-                        }
-                    );
-                    */
-                }
-            }
-
-        });
+        super.destroy(fromScene);
     }
 }

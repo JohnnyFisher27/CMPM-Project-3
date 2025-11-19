@@ -65,16 +65,22 @@ export class Start extends Phaser.Scene {
         this.numBullets = 3;
         this.canJump = false;
         this.flipSprite = true;
-        this.checkpoint = false;
 
-        this.hasTakenCandy = false;
         this.candyCount = 0;
-        this.hasTakenMonster = false;
         this.monsterCount = 0;
+        
+        this.colliderMap = new Map();
 
         this.map = this.add.tilemap('tiles');
         var tileset = this.map.addTilesetImage('monochrome_tilemap_packed', 'tilesheet');
 
+        this.anims.create({
+                key: "walk",
+                frames: this.anims.generateFrameNumbers('player_nor', {start: 0, end: 2}),
+                frameRate: 6,
+                repeat: -1
+            });
+        
         this.layer = this.map.createLayer("Ground", tileset, 0, 26);
         this.layer2 = this.map.createLayer("Background", tileset, 0, 26);
         this.layer.setDepth(0);
@@ -82,39 +88,40 @@ export class Start extends Phaser.Scene {
         this.layer.setCollisionBetween(1, 5600);
         this.physics.world.TILE_BIAS = 250;
 
-        this.playerInteractives = this.physics.add.group();
-        this.resettableObjects = this.physics.add.group();
-        this.clearObjects = this.physics.add.group();
+        this.playerInteractives = this.physics.add.group({
+            allowGravity: false,
+            immovable: true
+            });
+        this.resettableObjects = this.physics.add.group({
+            allowGravity: false,
+            immovable: true
+            });
+        this.clearObjects = this.physics.add.group({ 
+            allowGravity: false,
+            immovable: true
+            });
 
         this.jump = this.input.keyboard.addKey("Space", false, true);
         this.left = this.input.keyboard.addKey("A", false, true);
         this.right = this.input.keyboard.addKey("D", false, true);
     
-        this.createPlayer();    
-
         var dataLayer = this.map.getObjectLayer('data');
+        
+        dataLayer.objects.forEach((data) => {
+            if (data.name === 'collider' && data.properties && data.properties.length > 0) {
+                const key = data.properties[0].value;
+                                this.colliderMap.set(String(key), data);
+            }
+        });
+
         dataLayer.objects.forEach((data) => {
             const { x, y, name, height, width } = data;         
-
-            if (name === 'appearingSpike') {
-                let which = data.properties[0].name;
-                let angle = data.rotation;
-                const appearingSpike = new AppearingSpike({scene: this, x, y, dataLayer, which, player: this.player, angle});
-                appearingSpike.setDepth(1);
-                this.playerInteractives.add(appearingSpike);
-                this.resettableObjects.add(appearingSpike);
-                appearingSpike.body.setAllowGravity(false); 
-                appearingSpike.body.setImmovable(true);
-                appearingSpike.body.enable = false;
-            }
 
             if (name === 'spike') {
                 let angle = data.rotation;
                 const spike = new Spike({scene: this, x, y, player: this.player, angle});
                 spike.setDepth(1);
                 this.playerInteractives.add(spike);
-                spike.body.setAllowGravity(false); 
-                spike.body.setImmovable(true);
             }
 
             if (name === 'movingPlatform') {
@@ -126,31 +133,25 @@ export class Start extends Phaser.Scene {
                 const candy = new Candy({scene: this, x, y, player: this.player});
                 candy.setDepth(1);
                 this.playerInteractives.add(candy);
-                candy.body.setAllowGravity(false); 
-                candy.body.setImmovable(true);
             }
 
             if (name === 'monster') {
                 const monster = new Monster({scene: this, x, y, player: this.player});
                 monster.setDepth(1);
                 this.playerInteractives.add(monster);
-                monster.body.setAllowGravity(false); 
-                monster.body.setImmovable(true);
             }
 
             if (name === 'checkpoint') {
                 const checkpoint = new Checkpoint({scene: this, x, y, player: this.player});
                 checkpoint.setDepth(1);
                 this.playerInteractives.add(checkpoint);
-                checkpoint.body.setAllowGravity(false); 
-                checkpoint.body.setImmovable(true);
             }
-
-
         });
-
+        
+        this.createPlayer();    
         this.scene.launch('UI');
     }
+
 
     update(time) {
         let dt = (time - this.last_time)/100;
@@ -271,83 +272,162 @@ export class Start extends Phaser.Scene {
 
     }
 
-    createPlayer() {
+    createPlayer()  {
         this.numBullets = 3;
         this.events.emit('updateBullets', this.numBullets);   
         this.player = this.physics.add.sprite(this.player_x, this.player_y, 'player_nor');
         this.player.setDepth(2);
+        this.player.setDragX(1000); // Decelerate quickly on ground
+        this.player.setMaxVelocity(180, 500); // Cap horizontal and vertical speed
 
-        this.anims.create({
-            key: "walk",
-            frames: this.anims.generateFrameNumbers('player_nor', {start: 0, end: 2}),
-            frameRate: 6,
-            repeat: -1
-        });  
+        this.deathDelayEvent = null; 
 
         this.cameras.main.zoom = 1.75;
         this.cameras.main.startFollow(this.player, true, 0.5, 0.5, 0, 50);
         this.cameras.main.setDeadzone(0, 0);
-        this.physics.add.collider(this.layer, this.player);
-        this.physics.add.overlap(this.player, this.playerInteractives, this.handlePlayerInteraction, null, this);
 
-        //this.clearObjects.clear(true, true);
+        this.layerCollider = this.physics.add.collider(this.layer, this.player);
+        this.playerOverlap = this.physics.add.overlap(this.player, this.playerInteractives, this.handlePlayerInteraction, null, this);
+        this.platformColliders = [];
+
+        this.clearObjects.clear(true, true);
+        
         var dataLayer = this.map.getObjectLayer('data');
+        
         dataLayer.objects.forEach((data) => {
             const { x, y, name, height, width } = data; 
 
-                if (name === 'fallingPlatform') {
-                    let asset = data.properties[0].name;
+            const getSpikeKey = (obj) => {
+                if (!obj.properties || obj.properties.length === 0) {
+                    return null;
+                }
+                return String(obj.properties[0].value);
+            };
+            
+            switch (name) {
+                case 'fallingPlatform':
+                    let asset = data.properties.length > 0 ? data.properties[0].value : 'platform'; 
                     const fallingPlatform = new FallingPlatform({scene: this, x, y, asset, player: this.player});
                     fallingPlatform.setDepth(1);
                     this.playerInteractives.add(fallingPlatform);
                     this.clearObjects.add(fallingPlatform);
-                    fallingPlatform.body.setAllowGravity(false); 
-                    fallingPlatform.body.setImmovable(true);
-                }
+                    break; 
 
-                if (name === 'fallingSpike') {
-                    let which = data.properties[0].name;
-                    const fallingSpike = new FallingSpike({scene: this, x, y, dataLayer, which, player: this.player});
+                case 'fallingSpike':
+                    const fallingKey = getSpikeKey(data);
+                    
+                    if (!fallingKey) {
+                        console.error("FallingSpike object is missing the required integer key property.", data);
+                        break;
+                    }
+                    
+                    const fallingColliderData = this.colliderMap.get(fallingKey); 
+                    
+                    if (!fallingColliderData) {
+                        console.error(`FallingSpike collider lookup failed. Key: "${fallingKey}" not found in colliderMap. Check Tiled property structure.`, data);
+                        break; 
+                    }
+
+                    const fallingSpike = new FallingSpike({
+                        scene: this, 
+                        x, 
+                        y, 
+                        colliderData: fallingColliderData, 
+                        which: fallingKey, 
+                        player: this.player
+                    });
+                    
                     fallingSpike.setDepth(1);
                     this.playerInteractives.add(fallingSpike);
                     this.clearObjects.add(fallingSpike);
-                    fallingSpike.body.setAllowGravity(false); 
-                    fallingSpike.body.setImmovable(true);
-                }
+                    break;
 
-                if (name === 'appearingPlatform') {
+                case 'appearingPlatform':
                     const appearingPlatform = new AppearingPlatform({scene: this, x, y, player: this.player});
                     appearingPlatform.setDepth(1);
                     this.playerInteractives.add(appearingPlatform);
                     this.resettableObjects.add(appearingPlatform);
                     this.clearObjects.add(appearingPlatform);
-                    appearingPlatform.body.setAllowGravity(false); 
-                    appearingPlatform.body.setImmovable(true);
-                    this.physics.add.collider(appearingPlatform, this.player);
-                }
-            
+                    
+                    const collider = this.physics.add.collider(appearingPlatform, this.player);
+                    this.platformColliders.push(collider);
+                    break;
+
+                case 'appearingSpike':
+                    const appearingKey = getSpikeKey(data);
+                    
+                    if (!appearingKey) {
+                        console.error("AppearingSpike object is missing the required integer key property.", data);
+                        break;
+                    }
+
+                    let angle = data.rotation;
+                    
+                    const appearingColliderData = this.colliderMap.get(appearingKey); 
+
+                    if (!appearingColliderData) {
+                        console.error(`AppearingSpike collider lookup failed. Key: "${appearingKey}" not found in colliderMap. Check Tiled property structure.`, data);
+                        break; 
+                    }
+                    
+                    const appearingSpike = new AppearingSpike({
+                        scene: this, 
+                        x, 
+                        y, 
+                        colliderData: appearingColliderData, 
+                        which: appearingKey, 
+                        player: this.player, 
+                        angle
+                    });
+                    
+                    appearingSpike.setDepth(1);
+                    this.playerInteractives.add(appearingSpike);
+                    this.resettableObjects.add(appearingSpike);
+                    this.clearObjects.add(appearingSpike);
+                    appearingSpike.body.enable = false;
+                    break;
+            }
         });
     }
-
     destroyPlayer() {
-        this.player.destroy();
+        if (this.layerCollider) {
+            this.physics.world.removeCollider(this.layerCollider);
+            this.layerCollider = null; 
+        }
+        if (this.playerOverlap) {
+            this.physics.world.removeCollider(this.playerOverlap);
+            this.playerOverlap = null; 
+        }
+
+        this.platformColliders.forEach(collider => {
+            this.physics.world.removeCollider(collider);
+        });
+        this.platformColliders = []; 
+
+        if (this.deathDelayEvent) {
+            this.deathDelayEvent.remove(false);
+            this.deathDelayEvent = null;
+        }
+
+        //this.tweens.killTweensOf(this.player);
+
+        if (this.player) {
+            this.player.anims.stop();
+            this.player.destroy();
+            this.player = null; 
+        }
+
+
+            
     }
     
     handlePlayerInteraction(player, object) {
-        if (object.name === 'spike') {
-            this.time.delayedCall(100, () => {
-            this.respawnPlayer();
-            }, [], this);
-        }
-        else if (object.name == 'appearingSpike') {
-            this.time.delayedCall(100, () => {
-            this.respawnPlayer();
-            }, [], this);
-        }
-        else if (object.name == 'fallingSpike') {
-            this.time.delayedCall(100, () => {
-            this.respawnPlayer();
-            }, [], this);
+        if (object.name === 'spike' || object.name === 'appearingSpike' || object.name === 'fallingSpike') {
+            this.deathDelayEvent = this.time.delayedCall(100, () => {
+            if (this.scene) { 
+                this.respawnPlayer();
+            }
+        }, [], this);
             
         }
         else if (object.name === 'checkpoint') {
@@ -365,16 +445,19 @@ export class Start extends Phaser.Scene {
             object.destroy();
         }
         else if (object.name === 'fallingPlatform') {
-            this.tweens.add({
-                targets: object,
-                alpha: 0,
-                y: "+=25",
-                ease: 'Linear', 
-                duration: 100,
-                onComplete: () => {
+            const platformTween = this.tweens.add({
+            targets: object,
+            alpha: 0,
+            y: "+=25",
+            ease: 'Linear', 
+            duration: 100,
+            onComplete: () => {
+                if (object && object.destroy) { 
                     object.destroy();
-                                }
-                });
+                }
+                platformTween.remove();
+                }
+            });
         }
         else if (object.name === 'appearingPlatform') {
             object.setVisible(true);
@@ -386,6 +469,11 @@ export class Start extends Phaser.Scene {
 
         this.resettableObjects.children.each(function (object) {
             object.setVisible(false);
+            object.body.enable = false;
+            }, this);
+            
+        this.clearObjects.children.each(function (object) {
+            object.destroy(true); 
             }, this);
         
         this.createPlayer();
