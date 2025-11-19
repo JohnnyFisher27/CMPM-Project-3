@@ -56,7 +56,7 @@ export class Start extends Phaser.Scene {
         this.doublejump = 3;
         this.canJump = false;
         this.flipSprite = true;
-        this.moving = false;
+        this.hasTaken = false;
 
         this.player = this.physics.add.sprite(4200, 500, 'player_nor');
         this.player.setDepth(2);
@@ -93,8 +93,8 @@ export class Start extends Phaser.Scene {
 
         //this.cameras.main.centerOn(this.player.x + 300, this.player.y - 110);       //this needs a lot of work
         this.cameras.main.zoom = 1.75;
-        this.cameras.main.startFollow(this.player, true, 0.5, 0.5, 0, 100);
-        this.cameras.main.setDeadzone(0, 100);
+        this.cameras.main.startFollow(this.player, true, 0.5, 0.5, 0, 50);
+        this.cameras.main.setDeadzone(0, 0);
 
         const dataLayer = this.map.getObjectLayer('data');
         dataLayer.objects.forEach((data) => {
@@ -190,25 +190,22 @@ export class Start extends Phaser.Scene {
             this.canJump = true;
             this.player.angle = 0;
         }
-       
-        if (this.left.isDown) {
-            this.moving = true;
-            //this.sound.play('move', {loop: true}) fix this tomorrow
+        
+        if (this.left.isDown) {         
             this.player.body.setAccelerationX(-300);
             this.player.flipX = true;
         }
+
         if (this.player.body.velocity.x < -180) {       //cap movement speed
             this.player.body.setAccelerationX(0);
         }
         if (this.left.isUp && this.player.body.velocity.x < 0) {    //slow player down
-            
             this.player.body.setAccelerationX(1000);
             this.player.body.setVelocityX(0);
         }
 
 
         if (this.right.isDown) {
-            this.moving = true;
             this.player.body.setAccelerationX(300);
             this.player.flipX = false;
             
@@ -242,7 +239,6 @@ export class Start extends Phaser.Scene {
 
         if (this.hasTaken) {
             this.sound.play('collect');
-            console.log("HI")
             this.hasTaken = false;
         }
 
@@ -258,9 +254,9 @@ export class Start extends Phaser.Scene {
     shoot() {
         this.sound.play('shoot');
         var bullet = this.physics.add.sprite(this.player.x, this.player.y, 'bullet');
-        var bullet_fire = this.add.sprite(this.player.x, this.player.y, 'bullet_fire');
+        var bullet_fire = this.add.sprite(this.player.x, this.player.y+10, 'bullet_fire');
         bullet.setScale(0.3);
-        bullet_fire.setScale(0.5);
+        bullet_fire.setScale(1.5);
         bullet.angle = 90;
         bullet_fire.angle = 90;
         bullet.body.setVelocityY(500);
