@@ -7,6 +7,7 @@ import {MovingPlatform} from "../gameobjects/movingPlatform.js";
 import {AppearingSpike} from "../gameobjects/appearingSpike.js";
 import {UI} from '../scenes/UI.js';
 import { Checkpoint } from "../gameobjects/checkpoint.js";
+import { AppearingPlatform } from "../gameobjects/appearigPlatform.js";
 
 export class Start extends Phaser.Scene {
 
@@ -33,7 +34,7 @@ export class Start extends Phaser.Scene {
         this.load.image('collider', 'assets/Tiles/Default/tile_0001.png');
         this.load.image('candy', 'assets/Tiles/Default/tile_0102.png');
         this.load.image('fallingSpike', 'assets/Tiles/Default/tile_0166.png');
-        this.load.image('fallingPlatform', 'assets/Tiles/Default/tile_0250.png');
+        //this.load.image('fallingPlatform', 'assets/Tiles/Default/tile_0250.png');
         this.load.image('fallingPlat1', 'assets/Tiles/Default/tile_0276.png');
         this.load.image('fallingPlat2', 'assets/Tiles/Default/tile_0111.png');
         this.load.image('fallingPlat3', 'assets/Tiles/Default/tile_0116.png');
@@ -166,6 +167,11 @@ export class Start extends Phaser.Scene {
                 this.playerInteractives.add(checkpoint);
                 checkpoint.body.setAllowGravity(false); 
                 checkpoint.body.setImmovable(true);
+            }
+
+            if (name === 'appearingPlatform') {
+                const appearingPlatform = new AppearingPlatform({scene: this, x, y, player: this.player});
+                appearingPlatform.setDepth(1);
             }
         });
 

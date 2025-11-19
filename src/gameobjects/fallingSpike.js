@@ -54,11 +54,14 @@ export class FallingSpike extends Phaser.GameObjects.Sprite {
                         }
                     );
 
-                    /*scene.physics.add.overlap(this.body, player,
-                        () => {
-                            //what happens when spike hits player
-                        }
-                    );*/
+                    if (this.active) {
+                        scene.physics.add.overlap(this, player,
+                            () => {
+                                this.scene.scene.stop();
+                                this.scene.scene.start("GameOver");
+                            }
+                        );
+                    }
                 }
             }
 

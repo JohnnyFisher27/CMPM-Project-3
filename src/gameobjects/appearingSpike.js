@@ -28,7 +28,6 @@ export class AppearingSpike extends Phaser.GameObjects.Sprite {
             scene.physics.add.existing(this);
             this.body.setAllowGravity(false);
             this.body.setImmovable(true);
-            this.setActive(false);
             this.setVisible(false);
         }
 
@@ -40,16 +39,16 @@ export class AppearingSpike extends Phaser.GameObjects.Sprite {
                     const collider = new Collider({scene, x, y});
                     scene.physics.add.overlap(collider, player,
                         () => {
-                            this.setActive(true);
                             this.setVisible(true);
                         }
                     );
 
-                    /*scene.physics.add.overlap(this.body, player,
+                    scene.physics.add.overlap(this, player,
                         () => {
-                            //what happens when spike hits player
+                            this.scene.scene.stop();
+                            this.scene.scene.start("GameOver");
                         }
-                    );*/
+                    );
                 }
             }
 
