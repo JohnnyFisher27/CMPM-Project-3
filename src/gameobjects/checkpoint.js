@@ -1,7 +1,6 @@
 
 export class Checkpoint extends Phaser.GameObjects.Sprite {
     constructor({
-
         scene,
         x = 0,
         y = 0,
@@ -36,8 +35,8 @@ export class Checkpoint extends Phaser.GameObjects.Sprite {
             }
         );*/
 
-        scene.tweens.add({           //have not tested this yet, hope it moves up and down nicely
-            targets: this,     //so the player knows to interact with it
+        scene.tweens.add({
+            targets: this,
             duration: 500,
             loop: -1,
             yoyo: true,

@@ -22,11 +22,11 @@ export class FallingSpike extends Phaser.GameObjects.Sprite {
             scene.add.existing(this);
         }
 
-        /*if (enablePhysics) {
+        if (enablePhysics) {
             scene.physics.add.existing(this);
             this.body.setAllowGravity(false);
             this.body.setImmovable(true);
-        }*/
+        }
 
         dataLayer.objects.forEach((data) => {
             const { x, y, name, height, width } = data;         
@@ -47,21 +47,21 @@ export class FallingSpike extends Phaser.GameObjects.Sprite {
                                     this.body.setVelocity(0, 0);
                                     this.setY(spikeY);                  //places the spike offscreen, should move it more off screen though
                                                                         //maybe add a crashing sound into the ground
-                                    this.setActive(false);
+                                    this.body.enable = false;
                                     this.setVisible(false);
                                 });
                             }
                         }
                     );
 
-                    /*if (this.active) {
-                        scene.physics.add.overlap(this, player,
-                            () => {
-                                this.scene.scene.stop();
-                                this.scene.scene.start("GameOver");
-                            }
-                        );
-                    }*/
+                    /*
+                    scene.physics.add.overlap(this, player,
+                        () => {
+                            this.scene.scene.stop();
+                            this.scene.scene.start("GameOver");
+                        }
+                    );
+                    */
                 }
             }
 

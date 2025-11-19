@@ -1,7 +1,6 @@
 
 export class Candy extends Phaser.GameObjects.Sprite {
     constructor({
-
         scene,
         x = 0,
         y = 0,
@@ -23,18 +22,10 @@ export class Candy extends Phaser.GameObjects.Sprite {
             scene.physics.add.existing(this);
             this.body.setAllowGravity(false);
             this.body.setImmovable(true);
-            
         }
-        
-       /* scene.physics.add.overlap(this, player, //not sure if this works inside the constructor or even inside the file
-            () => {           
-                scene.hasTakenCandy = true;              //if not we can move this to a preupdate or to the start file
-                this.destroy();
-            }
-        );*/
 
-        scene.tweens.add({           //have not tested this yet, hope it moves up and down nicely
-            targets: this,     //so the player knows to interact with it
+        scene.tweens.add({
+            targets: this,
             duration: 500,
             loop: -1,
             yoyo: true,

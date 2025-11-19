@@ -29,6 +29,7 @@ export class AppearingSpike extends Phaser.GameObjects.Sprite {
             this.body.setAllowGravity(false);
             this.body.setImmovable(true);
             this.setVisible(false);
+            this.body.enable = false;
         }
 
         dataLayer.objects.forEach((data) => {
@@ -39,6 +40,7 @@ export class AppearingSpike extends Phaser.GameObjects.Sprite {
                     const collider = new Collider({scene, x, y});
                     scene.physics.add.overlap(collider, player,
                         () => {
+                            this.body.enable = true;
                             this.setVisible(true);
                         }
                     );

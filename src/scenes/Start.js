@@ -36,7 +36,6 @@ export class Start extends Phaser.Scene {
         this.load.image('collider', 'assets/Tiles/Default/tile_0001.png');
         this.load.image('candy', 'assets/Tiles/Default/tile_0102.png');
         this.load.image('fallingSpike', 'assets/Tiles/Default/tile_0166.png');
-        //this.load.image('fallingPlatform', 'assets/Tiles/Default/tile_0250.png');
         this.load.image('fallingPlat1', 'assets/Tiles/Default/tile_0276.png');
         this.load.image('fallingPlat2', 'assets/Tiles/Default/tile_0111.png');
         this.load.image('fallingPlat3', 'assets/Tiles/Default/tile_0116.png');
@@ -73,12 +72,6 @@ export class Start extends Phaser.Scene {
         this.hasTakenMonster = false;
         this.monsterCount = 0;
 
-        /*var disappearing_platform = this.physics.add.image(700, 500, 'platform')
-            .setImmovable(true)
-
-        disappearing_platform.body.setAllowGravity(false);
-        this.physics.add.collider(disappearing_platform, this.player, this.disappearPlatform, null, this);*/
-
         this.map = this.add.tilemap('tiles');
         var tileset = this.map.addTilesetImage('monochrome_tilemap_packed', 'tilesheet');
 
@@ -87,18 +80,15 @@ export class Start extends Phaser.Scene {
         this.layer.setDepth(0);
         this.layer2.setDepth(0);
         this.layer.setCollisionBetween(1, 5600);
-        this.physics.world.TILE_BIAS = 150;
+        this.physics.world.TILE_BIAS = 220;
 
         this.playerInteractives = this.physics.add.group();
         this.resettableObjects = this.physics.add.group();
         this.clearObjects = this.physics.add.group();
 
         this.jump = this.input.keyboard.addKey("Space", false, true);
-        //this.down = this.input.keyboard.addKey("S", false, true);
         this.left = this.input.keyboard.addKey("A", false, true);
         this.right = this.input.keyboard.addKey("D", false, true);
-
-        //this.cameras.main.centerOn(this.player.x + 300, this.player.y - 110);       //this needs a lot of work
     
         this.createPlayer();    
 
@@ -115,6 +105,7 @@ export class Start extends Phaser.Scene {
                 this.resettableObjects.add(appearingSpike);
                 appearingSpike.body.setAllowGravity(false); 
                 appearingSpike.body.setImmovable(true);
+                appearingSpike.body.enable = false;
             }
 
             if (name === 'spike') {
@@ -236,7 +227,7 @@ export class Start extends Phaser.Scene {
             this.player.body.setVelocityX(0);
         }
 
-        if (!isgrounded)                        //coyote time doesnt work ask professor
+        if (!isgrounded)
         {
             if (this.coyote)
             {
@@ -254,6 +245,7 @@ export class Start extends Phaser.Scene {
             this.coyote = false;
             this.grounded = true;
         }
+
         // 16 total
         if (this.hasTakenCandy) {
             this.sound.play('collect');
@@ -359,7 +351,6 @@ export class Start extends Phaser.Scene {
             
         }
         else if (object.name === 'checkpoint') {
-        
             this.player_x = object.x;
             this.player_y = object.y;
             this.checkpoint = true;
@@ -405,7 +396,6 @@ export class Start extends Phaser.Scene {
         bullet.destroy();
     }
 
-    //create bullet object
     shoot() {
         this.sound.play('shoot');
         var bullet = this.physics.add.sprite(this.player.x, this.player.y, 'bullet');
@@ -420,13 +410,11 @@ export class Start extends Phaser.Scene {
             }, [], this);
         this.physics.add.collider(this.layer, bullet, this.disappearBullet, null, this);
         this.events.emit('updateBullets', this.numBullets);   
-
-
     }
 
     checkEndGame()
     {
-        if (this.player.hp <= 0)        //should our player haver hp?
+        if (this.player.hp <= 0)
         {
             this.scene.stop("Start");
             this.scene.start('GameOver', /*{highscore: this.high_score}*/);
