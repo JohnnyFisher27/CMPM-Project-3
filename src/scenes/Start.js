@@ -86,7 +86,7 @@ export class Start extends Phaser.Scene {
         this.layer.setDepth(0);
         this.layer2.setDepth(0);
         this.layer.setCollisionBetween(1, 5600);
-        this.physics.world.TILE_BIAS = 250;
+        this.physics.world.TILE_BIAS = 300;
 
         this.playerInteractives = this.physics.add.group({
             allowGravity: false,
