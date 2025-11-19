@@ -43,12 +43,11 @@ export class AppearingSpike extends Phaser.GameObjects.Sprite {
                         }
                     );
 
-                    scene.physics.add.overlap(this, player,
+                    /*scene.physics.add.overlap(this, player,
                         () => {
-                            this.scene.scene.stop();
-                            this.scene.scene.start("GameOver");
+                            
                         }
-                    );
+                    );*/
                 }
             }
 

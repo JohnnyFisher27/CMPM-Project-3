@@ -22,11 +22,11 @@ export class FallingSpike extends Phaser.GameObjects.Sprite {
             scene.add.existing(this);
         }
 
-        if (enablePhysics) {
+        /*if (enablePhysics) {
             scene.physics.add.existing(this);
             this.body.setAllowGravity(false);
             this.body.setImmovable(true);
-        }
+        }*/
 
         dataLayer.objects.forEach((data) => {
             const { x, y, name, height, width } = data;         
@@ -54,14 +54,14 @@ export class FallingSpike extends Phaser.GameObjects.Sprite {
                         }
                     );
 
-                    if (this.active) {
+                    /*if (this.active) {
                         scene.physics.add.overlap(this, player,
                             () => {
                                 this.scene.scene.stop();
                                 this.scene.scene.start("GameOver");
                             }
                         );
-                    }
+                    }*/
                 }
             }
 

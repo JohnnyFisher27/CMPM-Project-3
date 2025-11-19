@@ -26,13 +26,14 @@ export class AppearingPlatform extends Phaser.GameObjects.Sprite {
             this.setVisible(false);
         }
 
-        scene.physics.add.overlap(this, player,
+
+        /*scene.physics.add.overlap(this, player,
             () => {
                 if (this.body.touching.up && player.body.touching.down) {
                     scene.physics.add.collider(this, player);
                     this.setVisible(true);
                 }
             }
-        );
+        );*/
     }
 }

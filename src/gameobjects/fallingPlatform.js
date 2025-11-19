@@ -27,10 +27,10 @@ export class FallingPlatform extends Phaser.GameObjects.Sprite {
             
         }
 
-        scene.physics.add.collider(this, player,
+        /*scene.physics.add.collider(this, player,
             () => {
                 if (player.body.blocked.down) {
-                    /*scene.tweens.add({        //turned off the shake before drop, it wasn't working correctly
+                    scene.tweens.add({        //turned off the shake before drop, it wasn't working correctly
                         targets: this,
                         yoyo: true,
                         repeat: 10,
@@ -40,7 +40,7 @@ export class FallingPlatform extends Phaser.GameObjects.Sprite {
                         },
                         ease: 'Linear',
                         duration: 50,
-                        onComplete: () => {*/
+                        onComplete: () => {
                             scene.tweens.add({
                                 targets: this,
                                 alpha: 0,
@@ -51,13 +51,13 @@ export class FallingPlatform extends Phaser.GameObjects.Sprite {
                                     this.destroy();
                                 }
                             });
-                        /*}
-                    });*/
+                        }
+                    });*
                 }
             }
         );
         
-        /*scene.physics.add.overlap(this, player,
+        scene.physics.add.overlap(this, player,
             () => {
                 this.destroy();
             }

@@ -8,6 +8,8 @@ import {AppearingSpike} from "../gameobjects/appearingSpike.js";
 import {UI} from '../scenes/UI.js';
 import { Checkpoint } from "../gameobjects/checkpoint.js";
 import { AppearingPlatform } from "../gameobjects/appearigPlatform.js";
+import {Collider} from "../gameobjects/collider.js";
+
 
 export class Start extends Phaser.Scene {
 
@@ -88,6 +90,8 @@ export class Start extends Phaser.Scene {
         this.physics.world.TILE_BIAS = 150;
 
         this.playerInteractives = this.physics.add.group();
+        this.resettableObjects = this.physics.add.group();
+        this.clearObjects = this.physics.add.group();
 
         this.jump = this.input.keyboard.addKey("Space", false, true);
         //this.down = this.input.keyboard.addKey("S", false, true);
@@ -98,18 +102,9 @@ export class Start extends Phaser.Scene {
     
         this.createPlayer();    
 
-        const dataLayer = this.map.getObjectLayer('data');
+        var dataLayer = this.map.getObjectLayer('data');
         dataLayer.objects.forEach((data) => {
             const { x, y, name, height, width } = data;         
-
-            if (name === 'fallingSpike') {
-                let which = data.properties[0].name;
-                const fallingSpike = new FallingSpike({scene: this, x, y, dataLayer, which, player: this.player});
-                fallingSpike.setDepth(1);
-                this.playerInteractives.add(fallingSpike);
-                fallingSpike.body.setAllowGravity(false); 
-                fallingSpike.body.setImmovable(true);
-            }
 
             if (name === 'appearingSpike') {
                 let which = data.properties[0].name;
@@ -117,6 +112,7 @@ export class Start extends Phaser.Scene {
                 const appearingSpike = new AppearingSpike({scene: this, x, y, dataLayer, which, player: this.player, angle});
                 appearingSpike.setDepth(1);
                 this.playerInteractives.add(appearingSpike);
+                this.resettableObjects.add(appearingSpike);
                 appearingSpike.body.setAllowGravity(false); 
                 appearingSpike.body.setImmovable(true);
             }
@@ -128,16 +124,6 @@ export class Start extends Phaser.Scene {
                 this.playerInteractives.add(spike);
                 spike.body.setAllowGravity(false); 
                 spike.body.setImmovable(true);
-            }
-
-            if (name === 'fallingPlatform') {
-                let asset = data.properties[0].name;
-                const fallingPlatform = new FallingPlatform({scene: this, x, y, asset, player: this.player});
-                fallingPlatform.setDepth(1);
-                this.playerInteractives.add(fallingPlatform);
-                fallingPlatform.body.setAllowGravity(false); 
-                fallingPlatform.body.setImmovable(true);
-                
             }
 
             if (name === 'movingPlatform') {
@@ -169,10 +155,7 @@ export class Start extends Phaser.Scene {
                 checkpoint.body.setImmovable(true);
             }
 
-            if (name === 'appearingPlatform') {
-                const appearingPlatform = new AppearingPlatform({scene: this, x, y, player: this.player});
-                appearingPlatform.setDepth(1);
-            }
+
         });
 
         this.scene.launch('UI');
@@ -315,15 +298,65 @@ export class Start extends Phaser.Scene {
         this.physics.add.collider(this.layer, this.player);
         this.physics.add.overlap(this.player, this.playerInteractives, this.handlePlayerInteraction, null, this);
 
+        //this.clearObjects.clear(true, true);
+        var dataLayer = this.map.getObjectLayer('data');
+        dataLayer.objects.forEach((data) => {
+            const { x, y, name, height, width } = data; 
+
+                if (name === 'fallingPlatform') {
+                    let asset = data.properties[0].name;
+                    const fallingPlatform = new FallingPlatform({scene: this, x, y, asset, player: this.player});
+                    fallingPlatform.setDepth(1);
+                    this.playerInteractives.add(fallingPlatform);
+                    this.clearObjects.add(fallingPlatform);
+                    fallingPlatform.body.setAllowGravity(false); 
+                    fallingPlatform.body.setImmovable(true);
+                }
+
+                if (name === 'fallingSpike') {
+                    let which = data.properties[0].name;
+                    const fallingSpike = new FallingSpike({scene: this, x, y, dataLayer, which, player: this.player});
+                    fallingSpike.setDepth(1);
+                    this.playerInteractives.add(fallingSpike);
+                    this.clearObjects.add(fallingSpike);
+                    fallingSpike.body.setAllowGravity(false); 
+                    fallingSpike.body.setImmovable(true);
+                }
+
+                if (name === 'appearingPlatform') {
+                    const appearingPlatform = new AppearingPlatform({scene: this, x, y, player: this.player});
+                    appearingPlatform.setDepth(1);
+                    this.playerInteractives.add(appearingPlatform);
+                    this.resettableObjects.add(appearingPlatform);
+                    this.clearObjects.add(appearingPlatform);
+                    appearingPlatform.body.setAllowGravity(false); 
+                    appearingPlatform.body.setImmovable(true);
+                    this.physics.add.collider(appearingPlatform, this.player);
+                }
+            
+        });
     }
 
     destroyPlayer() {
         this.player.destroy();
     }
-     
+    
     handlePlayerInteraction(player, object) {
         if (object.name === 'spike') {
+            this.time.delayedCall(100, () => {
             this.respawnPlayer();
+            }, [], this);
+        }
+        else if (object.name == 'appearingSpike') {
+            this.time.delayedCall(100, () => {
+            this.respawnPlayer();
+            }, [], this);
+        }
+        else if (object.name == 'fallingSpike') {
+            this.time.delayedCall(100, () => {
+            this.respawnPlayer();
+            }, [], this);
+            
         }
         else if (object.name === 'checkpoint') {
         
@@ -342,7 +375,7 @@ export class Start extends Phaser.Scene {
         }
         else if (object.name === 'fallingPlatform') {
             this.tweens.add({
-                targets: this,
+                targets: object,
                 alpha: 0,
                 y: "+=25",
                 ease: 'Linear', 
@@ -352,16 +385,18 @@ export class Start extends Phaser.Scene {
                                 }
                 });
         }
+        else if (object.name === 'appearingPlatform') {
+            object.setVisible(true);
+        }
     }
 
     respawnPlayer() {
         this.destroyPlayer();
 
-        this.playerInteractives.getChildren().forEach(object => {
-            if (object.name === 'fallingPlatform' && typeof object.reset === 'function') {
-            object.reset(); 
-            }
-        });
+        this.resettableObjects.children.each(function (object) {
+            object.setVisible(false);
+            }, this);
+        
         this.createPlayer();
     }
 
