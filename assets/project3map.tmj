@@ -1446,54 +1446,6 @@
                 {
                  "gid":50,
                  "height":16,
-                 "id":173,
-                 "name":"appearingPlatform",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":2436,
-                 "y":21.3333333333334
-                }, 
-                {
-                 "gid":50,
-                 "height":16,
-                 "id":174,
-                 "name":"appearingPlatform",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":2420,
-                 "y":21.3333333333334
-                }, 
-                {
-                 "gid":50,
-                 "height":16,
-                 "id":175,
-                 "name":"appearingPlatform",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":2404,
-                 "y":21.3333333333334
-                }, 
-                {
-                 "gid":50,
-                 "height":16,
-                 "id":176,
-                 "name":"appearingPlatform",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":2388,
-                 "y":21.3333333333334
-                }, 
-                {
-                 "gid":50,
-                 "height":16,
                  "id":177,
                  "name":"appearingPlatform",
                  "rotation":0,
@@ -6056,6 +6008,18 @@
                  "width":16,
                  "x":3119.67,
                  "y":161.67
+                }, 
+                {
+                 "gid":50,
+                 "height":16,
+                 "id":546,
+                 "name":"appearingPlatform",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":2388.17,
+                 "y":101.17
                 }],
          "offsetx":11.33,
          "offsety":19.33,
@@ -6066,7 +6030,7 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":546,
+ "nextobjectid":548,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
