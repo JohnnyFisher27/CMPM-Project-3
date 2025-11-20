@@ -31,6 +31,7 @@ export class Start extends Phaser.Scene {
 
         this.load.image('bullet', 'assets/Player_Tiles/tile_0044.png');
         this.load.image('bullet_fire', 'assets/Player_Tiles/tile_0043.png');
+        this.load.image('particle', 'assets/Tiles/Transparent/tile_0020.png');
 
         this.load.image('platform', 'assets/Tiles/Default/tile_0145.png');
         this.load.image('collider', 'assets/Tiles/Default/tile_0001.png');
@@ -272,6 +273,17 @@ export class Start extends Phaser.Scene {
             this.candyCount += 1;
             this.events.emit('updateCandy', this.candyCount);            
             this.hasTakenCandy = false;
+            let particle = this.add.particles(0, 0, 'particle', {
+                    scale: { start: 1, end: 0.01, random: true },
+                    angle: { min: 0, max: 360 },
+                    x: this.player.x,
+                    y: this.player.y,
+                    gravityY: -10,
+                    speed: { min: 1, max: 50 },
+                    lifespan: { min: 500, max: 1500 },
+                    alpha: { start: 1, end: 0 },
+                });
+            setTimeout(()=> particle.stop(), 300)
         }
         // 5 total
         if (this.hasTakenMonster) {
@@ -279,6 +291,17 @@ export class Start extends Phaser.Scene {
             this.monsterCount += 1;
             this.events.emit('updateMonster', this.monsterCount);            
             this.hasTakenMonster = false;
+            let particle = this.add.particles(0, 0, 'particle', {
+                    scale: { start: 1, end: 0.01, random: true },
+                    angle: { min: 0, max: 360 },
+                    x: this.player.x,
+                    y: this.player.y,
+                    gravityY: -10,
+                    speed: { min: 1, max: 50 },
+                    lifespan: { min: 500, max: 1500 },
+                    alpha: { start: 1, end: 0 },
+                });
+            setTimeout(()=> particle.stop(), 300)
         }
 
         if (this.checkpoint) {
