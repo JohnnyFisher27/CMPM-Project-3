@@ -93,30 +93,24 @@ export class Start extends Phaser.Scene {
         this.layer.setCollisionBetween(1, 5600);
         this.physics.world.TILE_BIAS = 300;
 
-        var button = this.add.image(4395, 455, 'button').setOrigin(0);
-        var buttonPressed = this.add.image(4395, 455, 'buttonPressed').setOrigin(0);
-        buttonPressed.setVisible(false)
+        this.button = this.add.image(4395, 455, 'button').setOrigin(0);
+        this.buttonPressed = this.add.image(4395, 455, 'buttonPressed').setOrigin(0);
+        this.buttonPressed.setVisible(false)
         const godmodeText = this.add.text(4250, 450, 'Click to enable god\n mode (for graders)', { 
             fontSize: '12px', 
             fill: '#fff' 
         }).setOrigin(0);
-        godmodeText.setInteractive()
+        godmodeText.setInteractive();
+        this.button.setInteractive();
+        this.buttonPressed.setInteractive();
         godmodeText.on('pointerdown', () => { 
-            if (!this.buttonClicked) {
-                button.setVisible(false)
-                buttonPressed.setVisible(true)
-                this.buttonClicked = true;
-                this.godMode = true;
-                this.sound.play('boom');
-                this.sound.play('checkpoint');
-                this.sound.play('collect');
-            }
-            else {
-                button.setVisible(true)
-                buttonPressed.setVisible(false)
-                this.buttonClicked = false;
-                this.godMode = false;
-            }
+            this.buttonClick();
+        });
+        this.button.on('pointerdown', () => { 
+            this.buttonClick();
+        });
+        this.buttonPressed.on('pointerdown', () => { 
+            this.buttonClick();
         });
 
         this.playerInteractives = this.physics.add.group({
@@ -537,6 +531,24 @@ export class Start extends Phaser.Scene {
             }, this);
         
         this.createPlayer();
+    }
+
+    buttonClick() {
+        if (!this.buttonClicked) {
+                this.button.setVisible(false)
+                this.buttonPressed.setVisible(true)
+                this.buttonClicked = true;
+                this.godMode = true;
+                this.sound.play('boom');
+                this.sound.play('checkpoint');
+                this.sound.play('collect');
+            }
+        else {
+                this.button.setVisible(true)
+                this.buttonPressed.setVisible(false)
+                this.buttonClicked = false;
+                this.godMode = false;
+            }
     }
 
     disappearBullet(bullet) {
