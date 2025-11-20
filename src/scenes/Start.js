@@ -45,6 +45,8 @@ export class Start extends Phaser.Scene {
         this.load.image('spike', 'assets/Tiles/Default/tile_0183.png');
         this.load.image('monster', 'assets/Tiles/Default/tile_0340.png');
 
+        this.load.image('button', 'assets/Tiles/Default/tile_0370.png')
+        this.load.image('buttonPressed', 'assets/Tiles/Default/tile_0369.png')
         this.load.image('player', 'assets/player_normal.png');
         
         this.load.audio('shoot', 'assets/Hit9.wav');
@@ -66,6 +68,8 @@ export class Start extends Phaser.Scene {
         this.numBullets = 3;
         this.canJump = false;
         this.flipSprite = true;
+        this.buttonClicked = false;
+        this.godMode = false;
 
         this.candyCount = 0;
         this.monsterCount = 0;
@@ -88,6 +92,32 @@ export class Start extends Phaser.Scene {
         this.layer2.setDepth(0);
         this.layer.setCollisionBetween(1, 5600);
         this.physics.world.TILE_BIAS = 300;
+
+        var button = this.add.image(4395, 455, 'button').setOrigin(0);
+        var buttonPressed = this.add.image(4395, 455, 'buttonPressed').setOrigin(0);
+        buttonPressed.setVisible(false)
+        const godmodeText = this.add.text(4250, 450, 'Click to enable god\n mode (for graders)', { 
+            fontSize: '12px', 
+            fill: '#fff' 
+        }).setOrigin(0);
+        godmodeText.setInteractive()
+        godmodeText.on('pointerdown', () => { 
+            if (!this.buttonClicked) {
+                button.setVisible(false)
+                buttonPressed.setVisible(true)
+                this.buttonClicked = true;
+                this.godMode = true;
+                this.sound.play('boom');
+                this.sound.play('checkpoint');
+                this.sound.play('collect');
+            }
+            else {
+                button.setVisible(true)
+                buttonPressed.setVisible(false)
+                this.buttonClicked = false;
+                this.godMode = false;
+            }
+        });
 
         this.playerInteractives = this.physics.add.group({
             allowGravity: false,
@@ -201,7 +231,8 @@ export class Start extends Phaser.Scene {
         else {
             if (this.jump.isDown && this.canJump && this.numBullets > 0) {      //double jump
                 this.canJump = false;
-                this.numBullets -= 1;
+                if (!this.godMode)
+                    this.numBullets -= 1;
                 this.player.body.setVelocityY(-300);
                 this.cameras.main.shake(200, 0.0025);
                 this.shoot()
@@ -267,7 +298,7 @@ export class Start extends Phaser.Scene {
             this.grounded = true;
         }
 
-        // 16 total
+        // 17 total
         if (this.hasTakenCandy) {
             this.sound.play('collect');
             this.candyCount += 1;
@@ -451,7 +482,7 @@ export class Start extends Phaser.Scene {
     }
     
     handlePlayerInteraction(player, object) {
-        if (object.name === 'spike' || object.name === 'appearingSpike' || object.name === 'fallingSpike') {
+        if ((object.name === 'spike' || object.name === 'appearingSpike' || object.name === 'fallingSpike') && !this.godMode) {
             this.deathDelayEvent = this.time.delayedCall(100, () => {
             if (this.scene) { 
                 this.respawnPlayer();
