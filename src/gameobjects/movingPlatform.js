@@ -32,15 +32,15 @@ export class MovingPlatform extends Phaser.GameObjects.Sprite {
             loop: -1,
             yoyo: true,
             hold: 2000,
-            x: "+=500"
+            x: "+=100"
         });
 
-        scene.physics.add.collider(this, player,        //not tested
+        /*scene.physics.add.collider(this, player,        //not tested
             () => {
                 if (this.body.moves && this.body.touching.up && player.body.touching.down) {
                     player.setGravityY(10000);
                 }
             }
-        );
+        );*/
     }
 }

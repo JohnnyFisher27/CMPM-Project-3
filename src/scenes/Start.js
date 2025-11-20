@@ -41,6 +41,7 @@ export class Start extends Phaser.Scene {
         this.load.image('fallingPlat2', 'assets/Tiles/Default/tile_0111.png');
         this.load.image('fallingPlat3', 'assets/Tiles/Default/tile_0116.png');
         this.load.image('appearingPlatform', 'assets/Tiles/Default/tile_0049.png');
+        this.load.image('movingPlatform', 'assets/Tiles/Default/tile_0111.png');
         this.load.image('checkpoint', 'assets/Tiles/Default/tile_0041.png');
         this.load.image('spike', 'assets/Tiles/Default/tile_0183.png');
         this.load.image('monster', 'assets/Tiles/Default/tile_0340.png');
@@ -201,6 +202,7 @@ export class Start extends Phaser.Scene {
             if (name === 'movingPlatform') {
                 const movingPlatform = new MovingPlatform({scene: this, x, y, player: this.player});
                 movingPlatform.setDepth(1);
+                this.playerInteractives.add(movingPlatform);
             }
 
             if (name === 'candy') {
@@ -392,7 +394,7 @@ export class Start extends Phaser.Scene {
 
         this.cameras.main.zoom = 1.75;
         this.cameras.main.startFollow(this.player, true, 0.5, 0.5, 0, 50);
-        this.cameras.main.setDeadzone(0, 0);
+        this.cameras.main.setDeadzone(100, 100);
 
         this.layerCollider = this.physics.add.collider(this.layer, this.player);
         this.playerOverlap = this.physics.add.overlap(this.player, this.playerInteractives, this.handlePlayerInteraction, null, this);
@@ -521,7 +523,6 @@ export class Start extends Phaser.Scene {
             this.deathDelayEvent = this.time.delayedCall(100, () => {
             if (this.scene) { 
                 this.respawnPlayer();
-
             }
         }, [], this);
             
@@ -557,6 +558,10 @@ export class Start extends Phaser.Scene {
         }
         else if (object.name === 'appearingPlatform') {
             object.setVisible(true);
+        }
+
+        else if (object.name === 'movingPlatform') {
+            this.physics.add.collider(object, this.player);
         }
     }
 
