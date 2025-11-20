@@ -13,7 +13,7 @@ export class GameOver extends Phaser.Scene {
     }
 
     create() {
-        this.add.text(290, 220, 'GAME OVER.', { fontSize: '128px', fill: '#FFF', align: "center" });
+        this.add.text(395, 220, 'YOU WIN', { fontSize: '128px', fill: '#FFF', align: "center" });
         //this.add.text(350, 340, 'High Score: ' + this.highscore, { fontSize: '78px', fill: '#FFF', align: "center" });
         this.add.text(395, 460, 'Press R to restart', { fontSize: '50px', fill: '#FFF', align: "center" });
 

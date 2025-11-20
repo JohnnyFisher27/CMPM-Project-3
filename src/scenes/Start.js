@@ -47,6 +47,8 @@ export class Start extends Phaser.Scene {
 
         this.load.image('button', 'assets/Tiles/Default/tile_0370.png')
         this.load.image('buttonPressed', 'assets/Tiles/Default/tile_0369.png')
+        this.load.image('door', 'assets/Tiles/Default/tile_0056.png')
+        this.load.image('doorOpen', 'assets/Tiles/Default/tile_0058.png')
         this.load.image('player', 'assets/player_normal.png');
         
         this.load.audio('shoot', 'assets/Hit9.wav');
@@ -55,10 +57,14 @@ export class Start extends Phaser.Scene {
         this.load.audio('collect', 'assets/Pickup3.wav');
         this.load.audio('move', 'assets/Random17.wav');
         this.load.audio('checkpoint', 'assets/PowerUp7.wav');
+        this.load.audio('death', 'assets/Hit19.wav');
+        this.load.audio('victory', 'assets/PowerUp10.wav');
 
     }
 
     create() {
+        this.sound.play('victory');
+
         this.player_x = 4450;
         this.player_y = 500;
 
@@ -70,11 +76,14 @@ export class Start extends Phaser.Scene {
         this.flipSprite = true;
         this.buttonClicked = false;
         this.godMode = false;
+        this.gameEnded = false;
 
         this.candyCount = 0;
         this.monsterCount = 0;
         
         this.colliderMap = new Map(); 
+
+        this.deathSound = this.sound.add('death');
 
         this.map = this.add.tilemap('tiles');
         var tileset = this.map.addTilesetImage('monochrome_tilemap_packed', 'tilesheet');
@@ -112,6 +121,26 @@ export class Start extends Phaser.Scene {
         this.buttonPressed.on('pointerdown', () => { 
             this.buttonClick();
         });
+
+        this.door = this.add.image(4550, 473,'door').setOrigin(0);
+        this.door.setScale(2)
+
+        var candy = this.add.image(4530, 440, 'candy').setOrigin(0);
+        candy.setScale(1);
+        
+        this.candyText = this.add.text(4525, 460, '0/15', { 
+            fontSize: '12px', 
+            fill: '#fff' 
+        }).setOrigin(0);
+
+        var monster = this.add.image(4583, 438, 'monster').setOrigin(0);
+        monster.setScale();
+        
+        this.monsterText = this.add.text(4578, 460, '0/5', { 
+            fontSize: '12px', 
+            fill: '#fff' 
+        }).setOrigin(0);
+
 
         this.playerInteractives = this.physics.add.group({
             allowGravity: false,
@@ -296,6 +325,7 @@ export class Start extends Phaser.Scene {
         if (this.hasTakenCandy) {
             this.sound.play('collect');
             this.candyCount += 1;
+            this.candyText.setText(`${this.candyCount}/15`);
             this.events.emit('updateCandy', this.candyCount);            
             this.hasTakenCandy = false;
             let particle = this.add.particles(0, 0, 'particle', {
@@ -314,6 +344,7 @@ export class Start extends Phaser.Scene {
         if (this.hasTakenMonster) {
             this.sound.play('collect');
             this.monsterCount += 1;
+            this.monsterText.setText(`${this.monsterCount}/5`);
             this.events.emit('updateMonster', this.monsterCount);            
             this.hasTakenMonster = false;
             let particle = this.add.particles(0, 0, 'particle', {
@@ -337,9 +368,19 @@ export class Start extends Phaser.Scene {
 
         }
 
+        if (this.monsterCount == 5 && this.candyCount >= 15 && !this.gameEnded) {
+            this.gameEnded = true;
+            this.door.destroy();
+            this.doorOpen = this.physics.add.sprite(4550, 473,'doorOpen').setOrigin(0);
+            this.doorOpen.body.setAllowGravity(false)
+            this.doorOpen.body.setImmovable(true)
+            this.doorOpen.setScale(2)
+            this.physics.add.collider(this.doorOpen, this.player, this.checkEndGame, null, this);
+        }
+
     }
 
-       createPlayer() {
+    createPlayer() {
         this.numBullets = 3;
         this.events.emit('updateBullets', this.numBullets);   
         this.player = this.physics.add.sprite(this.player_x, this.player_y, 'player_nor');
@@ -480,6 +521,7 @@ export class Start extends Phaser.Scene {
             this.deathDelayEvent = this.time.delayedCall(100, () => {
             if (this.scene) { 
                 this.respawnPlayer();
+
             }
         }, [], this);
             
@@ -521,6 +563,10 @@ export class Start extends Phaser.Scene {
     respawnPlayer() {
         this.destroyPlayer();
 
+        if (!this.deathSound.isPlaying) {
+            this.deathSound.play();
+        }
+
         this.resettableObjects.children.each(function (object) {
             object.setVisible(false);
             object.body.enable = false;
@@ -534,6 +580,7 @@ export class Start extends Phaser.Scene {
     }
 
     buttonClick() {
+        this.numBullets = 3;
         if (!this.buttonClicked) {
                 this.button.setVisible(false)
                 this.buttonPressed.setVisible(true)
@@ -574,11 +621,13 @@ export class Start extends Phaser.Scene {
 
     checkEndGame()
     {
-        if (this.player.hp <= 0)
-        {
-            this.scene.stop("Start");
-            this.scene.start('GameOver', /*{highscore: this.high_score}*/);
-        }
+        this.sound.play('collect');
+        this.sound.play('checkpoint');
+        this.sound.play('victory');
+
+        this.scene.stop('UI');
+        this.scene.stop("Start");
+        this.scene.start('GameOver', /*{highscore: this.high_score}*/);
     }
     
 }
