@@ -19,7 +19,7 @@ const config = {
               x: 0,
               y: 25           
           },
-          debug: true
+          debug: false
         }
     },
     scene: [

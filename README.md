@@ -5,7 +5,7 @@ Camera
 The camera follows the player in the center of the screen with a little offset so that the camera is actually positioned a bit above the player. There is also a deadzone box of 100 by 100.
 
 Which student created which level, and what is each level's unique mechanic?
-The player starts in the central hub with the name of the game in the air. The ‘level’ to the left is Johnny’s level that utilizes appearing platforms to trick the player. The ‘level’ to the right is Alina’s level that utilizes appearing spikes to trick the player.
+The player starts in the central hub with the name of the game in the air. The ‘level’ to the left is Johnny’s level that utilizes appearing/falling platforms to trick the player. The ‘level’ to the right is Alina’s level that utilizes appearing/falling spikes to trick the player.
 
 How the teaching team can select which level to play (is there a menu? a secret key we can press to switch between levels?)
 Because the player can choose either to go left or right, they can do any level they want in the order they want to. We have also added a god mode button in the hub that the graders can press with their mouse to turn off the killing feature on the spikes and give the player infinite double jumps.
@@ -25,4 +25,4 @@ Complex camera:
 The camera follows the player in the center of the screen with a little offset so that the camera is actually positioned a bit above the player. There is also a deadzone box of 100 by 100. Rubric says implementing a deadzone counts.
 Moving platform:
 We have a platform that moves back and forth, and when the player lands on the platform they don’t slide around. You could say they’ve landed themselves in a sticky situation. Literally, the platform is really sticky.
-
+Puzzles: While there are no locks and keys, because of the nature of objects appearing/disappearing each area is a puzzle to manuever. It will take the player multiple deaths to figure out the right path to get all the collectables.
