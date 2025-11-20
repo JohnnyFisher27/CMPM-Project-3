@@ -561,7 +561,13 @@ export class Start extends Phaser.Scene {
         }
 
         else if (object.name === 'movingPlatform') {
-            this.physics.add.collider(object, this.player);
+            this.physics.add.collider(object, this.player,
+                () => {
+                    if (object.body.moves && object.body.touching.up && this.player.body.touching.down) {
+                        this.player.x = object.x + 8;
+                    }
+                }
+            );
         }
     }
 

@@ -11,7 +11,7 @@ export class MovingPlatform extends Phaser.GameObjects.Sprite {
     }) 
     
     {
-        super(scene, x, y, 'movingPlatform');       //need to add asset
+        super(scene, x, y, 'movingPlatform');
         this.setOrigin(0, 1);
         this.setName(name || 'movingPlatform');
 
@@ -26,7 +26,7 @@ export class MovingPlatform extends Phaser.GameObjects.Sprite {
             this.body.setVelocity(100, -100);
         }
 
-        scene.tweens.add({           //have not tested this so see if it moves back and forth
+        scene.tweens.add({
             targets: this,
             duration: 5000,
             loop: -1,
@@ -34,13 +34,5 @@ export class MovingPlatform extends Phaser.GameObjects.Sprite {
             hold: 2000,
             x: "+=100"
         });
-
-        /*scene.physics.add.collider(this, player,        //not tested
-            () => {
-                if (this.body.moves && this.body.touching.up && player.body.touching.down) {
-                    player.setGravityY(10000);
-                }
-            }
-        );*/
     }
 }
